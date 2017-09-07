@@ -6,8 +6,12 @@ package com.kayzr.kayzrstaff.Domain;
 
 public class User {
 
+    private int id ;
     private boolean loggedOn ;
     private String username;
     private String password;
+    private Rank rank;
+    private String gsm;
+
 
 }

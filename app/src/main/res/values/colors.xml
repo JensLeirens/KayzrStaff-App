@@ -5,5 +5,7 @@
     <color name="colorAccent">#444d54</color>
     <color name="colorText">#5b99cc</color>
     <color name="colorbutton">#36c6d3</color>
-
+    <color name="colorAdmin">#8508e4</color>
+    <color name="colorCM">#15bdff</color>
+    <color name="colorMOD">#ff5b1c</color>
 </resources>

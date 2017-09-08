@@ -13,11 +13,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.kayzr.kayzrstaff.Fragments.AvailibilitiesFragment;
-import com.kayzr.kayzrstaff.Fragments.HomeFragment;
-import com.kayzr.kayzrstaff.Fragments.RosterFragment;
-import com.kayzr.kayzrstaff.Fragments.SettingsFragment;
-import com.kayzr.kayzrstaff.Fragments.TeamInfoFragment;
+import com.kayzr.kayzrstaff.fragments.AvailibilitiesFragment;
+import com.kayzr.kayzrstaff.fragments.HomeFragment;
+import com.kayzr.kayzrstaff.fragments.RosterFragment;
+import com.kayzr.kayzrstaff.fragments.SettingsFragment;
+import com.kayzr.kayzrstaff.fragments.TeamInfoFragment;
+import com.kayzr.kayzrstaff.network.Calls;
+import com.kayzr.kayzrstaff.network.Config;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,6 +47,26 @@ public class MainActivity extends AppCompatActivity
         displaySelectedScreen(R.id.nav_home);
         navigationView.setNavigationItemSelectedListener(this);
     }
+
+
+    public void getTournaments() {
+        Calls caller = Config.getRetrofit().create(Calls.class);
+        /*Call<List<Challenge>> call = caller.getThreeRandomChallenges();
+        call.enqueue(new Callback<List<Challenge>>() {
+            @Override
+            public void onResponse(Call<List<Challenge>> call, Response<List<Challenge>> response) {
+                day.setChallenges(response.body());
+                Log.e("Backend Call", " call successful (three random challenges)");
+            }
+
+            @Override
+            public void onFailure(Call<List<Challenge>> call, Throwable t) {
+                Log.e("Backend CAll", "call failed (three random challenges) " + t.getMessage());
+            }
+        });*/
+
+    }
+
 
     @Override
     public void onBackPressed() {

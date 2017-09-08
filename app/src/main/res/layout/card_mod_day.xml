@@ -34,7 +34,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="10dp"
                 android:text="Monday 06/09/2017"
-                android:textColor="@color/cardview_light_background"
+                android:textColor="@color/colorText"
                 android:textStyle="bold" />
 
             <TextView
@@ -43,8 +43,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerInParent="true"
-                android:text="Tourney at: 20h00 "
-                android:textColor="@color/cardview_light_background" />
+                android:text="@string/modDayTourneyTime"
+                android:textColor="@color/colorText" />
 
             <TextView
                 android:id="@+id/modDayTournament"
@@ -53,7 +53,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:text="CSGO 2v2 "
-                android:textColor="@color/cardview_light_background" />
+                android:textColor="@color/colorText" />
 
 
         </RelativeLayout>

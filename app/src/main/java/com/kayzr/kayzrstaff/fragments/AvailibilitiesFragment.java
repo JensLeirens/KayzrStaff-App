@@ -1,4 +1,4 @@
-package com.kayzr.kayzrstaff.Fragments;
+package com.kayzr.kayzrstaff.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

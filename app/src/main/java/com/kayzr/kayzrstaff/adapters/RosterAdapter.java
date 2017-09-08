@@ -46,7 +46,7 @@ public class RosterAdapter extends RecyclerView.Adapter<RosterAdapter.RosterView
 
         rosterCardMod.setText(mod);
         rosterCardHour.setText(tournaments.get(position).getUur());
-        rosterCardName.setText(tournaments.get(position).getNaamKort());
+        rosterCardName.setText(tournaments.get(position).getNaamkort());
     }
 
     @Override

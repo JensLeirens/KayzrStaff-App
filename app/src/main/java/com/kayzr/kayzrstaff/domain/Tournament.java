@@ -7,20 +7,20 @@ package com.kayzr.kayzrstaff.domain;
 public class Tournament {
     private int id;
     private String naam;
-    private String naamKort;
+    private String naamkort;
     private String dag;
     private String datum;
     private String uur;
-    private String Moderator;
+    private String moderator;
 
-    public Tournament(int id, String naam, String naamKort, String dag, String datum, String uur, String moderator) {
+    public Tournament(int id, String naam, String naamkort, String dag, String datum, String uur, String moderator) {
         this.id = id;
         this.naam = naam;
-        this.naamKort = naamKort;
+        this.naamkort = naamkort;
         this.dag = dag;
         this.datum = datum;
         this.uur = uur;
-        Moderator = moderator;
+        this.moderator = moderator;
     }
 
     public Tournament() {
@@ -42,12 +42,12 @@ public class Tournament {
         this.naam = naam;
     }
 
-    public String getNaamKort() {
-        return naamKort;
+    public String getNaamkort() {
+        return naamkort;
     }
 
-    public void setNaamKort(String naamKort) {
-        this.naamKort = naamKort;
+    public void setNaamkort(String naamkort) {
+        this.naamkort = naamkort;
     }
 
     public String getDag() {
@@ -75,10 +75,10 @@ public class Tournament {
     }
 
     public String getModerator() {
-        return Moderator;
+        return moderator;
     }
 
     public void setModerator(String moderator) {
-        Moderator = moderator;
+        this.moderator = moderator;
     }
 }

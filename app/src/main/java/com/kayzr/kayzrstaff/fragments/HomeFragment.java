@@ -45,6 +45,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void initdata(){
+        //TODO: check op current user name then display these tourneys
         tournaments.add(new Tournament(1,"Counter Strike: Global Offense 2v2","CSGO 2v2", "Woensdag","06/09/2017","20h00","Mafken;ADC wildsquirte"));
         tournaments.add(new Tournament(1,"League of Legends 5v5","LOL 5V5", "Zaterdag","09/09/2017","19h30","Mafken"));
     }

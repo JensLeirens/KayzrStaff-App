@@ -6,34 +6,25 @@ package com.kayzr.kayzrstaff.domain;
 
 public class User {
 
-    private int id ;
+    private int id;
     private boolean loggedOn ;
     private String username;
     private String password;
-    private Rank rank;
+    private Role role;
     private String gsm;
-    private String fullName;
-
-    public User(int id, boolean loggedOn, String username, String password, Rank rank, String gsm, String fullName) {
-        this.id = id;
-        this.loggedOn = loggedOn;
-        this.username = username;
-        this.password = password;
-        this.rank = rank;
-        this.gsm = gsm;
-        this.fullName = fullName;
-    }
-
+    private String fullname;
 
     public User() {
     }
 
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public User(int id, boolean loggedOn, String username, String password, Role role, String gsm, String fullname) {
+        this.id = id;
+        this.loggedOn = loggedOn;
+        this.username = username;
+        this.password = password;
+        this.role = role;
+        this.gsm = gsm;
+        this.fullname = fullname;
     }
 
     public int getId() {
@@ -68,12 +59,12 @@ public class User {
         this.password = password;
     }
 
-    public Rank getRank() {
-        return rank;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRank(Rank rank) {
-        this.rank = rank;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public String getGsm() {
@@ -82,5 +73,13 @@ public class User {
 
     public void setGsm(String gsm) {
         this.gsm = gsm;
+    }
+
+    public String getFullname() {
+        return fullname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
     }
 }

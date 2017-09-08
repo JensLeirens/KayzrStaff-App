@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kayzr.kayzrstaff.R;
 import com.kayzr.kayzrstaff.domain.User;
@@ -42,15 +43,19 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         TextView TIusername = holder.TIusername;
         Button callButton = holder.callButton;
 
-        TIFullName.setText(users.get(position).getFullName());
+        TIFullName.setText(users.get(position).getFullname());
         TIusername.setText(users.get(position).getUsername());
 
         callButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:"+users.get(position).getGsm()));
-                context.startActivity(intent);
+                if(users.get(position).getUsername().equals("Cancelled")){
+                    Toast.makeText(context,"sorry this number has been Cancelled!",Toast.LENGTH_SHORT).show(); //hihi
+                }else {
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.setData(Uri.parse("tel:" + users.get(position).getGsm()));
+                    context.startActivity(intent);
+                }
             }
         });
 

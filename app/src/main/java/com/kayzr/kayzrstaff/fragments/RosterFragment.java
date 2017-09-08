@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.kayzr.kayzrstaff.MainActivity;
 import com.kayzr.kayzrstaff.R;
 import com.kayzr.kayzrstaff.adapters.RosterAdapter;
 import com.kayzr.kayzrstaff.domain.Tournament;
@@ -28,6 +29,8 @@ public class RosterFragment extends Fragment {
 
     protected RecyclerView.LayoutManager mLayoutManager;
     private List<Tournament> tournaments = new ArrayList<>();
+
+    //todo make the first index go to the current day of the week
     private int tabIndex = 0 ;
 
     @Nullable
@@ -37,6 +40,7 @@ public class RosterFragment extends Fragment {
         ButterKnife.bind(this, v);
 
         initdata();
+        initializeAdapter();
 
         mTablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -95,8 +99,7 @@ public class RosterFragment extends Fragment {
     }
 
     private void initdata(){
-        tournaments.add(new Tournament(1,"Counter Strike: Global Offense 2v2","CSGO 2v2", "Woensdag","06/09/2017","20h00","Mafken;ADC wildsquirte"));
-        tournaments.add(new Tournament(1,"League of Legends 5v5","LOL 5V5", "Zaterdag","09/09/2017","19h30","Mafken"));
+       tournaments = MainActivity.app.getThisWeek();
     }
 
     @Override

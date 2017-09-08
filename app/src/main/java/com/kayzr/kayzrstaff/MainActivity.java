@@ -10,9 +10,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.kayzr.kayzrstaff.domain.KayzrApp;
+import com.kayzr.kayzrstaff.domain.Tournament;
+import com.kayzr.kayzrstaff.domain.User;
 import com.kayzr.kayzrstaff.fragments.AvailibilitiesFragment;
 import com.kayzr.kayzrstaff.fragments.HomeFragment;
 import com.kayzr.kayzrstaff.fragments.RosterFragment;
@@ -21,8 +25,13 @@ import com.kayzr.kayzrstaff.fragments.TeamInfoFragment;
 import com.kayzr.kayzrstaff.network.Calls;
 import com.kayzr.kayzrstaff.network.Config;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -30,6 +39,8 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.toolbar)Toolbar toolbar;
     @BindView(R.id.drawer_layout) DrawerLayout drawer;
     @BindView(R.id.nav_view)NavigationView navigationView;
+
+    public static KayzrApp app;
 
 
     @Override
@@ -45,25 +56,75 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         displaySelectedScreen(R.id.nav_home);
+
+        app = (KayzrApp) getApplicationContext();
+/*        if(app.getCurrentUser() == null){
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }*/
+        getThisWeekTournaments();
+        getNextWeekTournaments();
+        getUsersList();
+
         navigationView.setNavigationItemSelectedListener(this);
     }
 
 
-    public void getTournaments() {
+    public void getThisWeekTournaments() {
+
         Calls caller = Config.getRetrofit().create(Calls.class);
-        /*Call<List<Challenge>> call = caller.getThreeRandomChallenges();
-        call.enqueue(new Callback<List<Challenge>>() {
+        Call<List<Tournament>> call = caller.getThisWeekTournaments();
+        call.enqueue(new Callback<List<Tournament>>() {
             @Override
-            public void onResponse(Call<List<Challenge>> call, Response<List<Challenge>> response) {
-                day.setChallenges(response.body());
-                Log.e("Backend Call", " call successful (three random challenges)");
+            public void onResponse(Call<List<Tournament>> call, Response<List<Tournament>> response) {
+                app.setThisWeek(response.body());
+                Log.d("Backend Call", " call successful (ThisWeekTournaments)");
             }
 
             @Override
-            public void onFailure(Call<List<Challenge>> call, Throwable t) {
-                Log.e("Backend CAll", "call failed (three random challenges) " + t.getMessage());
+            public void onFailure(Call<List<Tournament>> call, Throwable t) {
+                Log.e("Backend CAll", "call failed (ThisWeekTournaments) " + t.getMessage());
             }
-        });*/
+        });
+
+    }
+
+    public void getNextWeekTournaments() {
+
+        Calls caller = Config.getRetrofit().create(Calls.class);
+        Call<List<Tournament>> call = caller.getNextWeekTournaments();
+        call.enqueue(new Callback<List<Tournament>>() {
+            @Override
+            public void onResponse(Call<List<Tournament>> call, Response<List<Tournament>> response) {
+                app.setNextWeek(response.body());
+                Log.d("Backend Call", " call successful (NextWeekTournaments)");
+            }
+
+            @Override
+            public void onFailure(Call<List<Tournament>> call, Throwable t) {
+                Log.e("Backend CAll", "call failed (NextWeekTournaments) " + t.getMessage());
+            }
+        });
+
+    }
+
+    public void getUsersList() {
+
+        Calls caller = Config.getRetrofit().create(Calls.class);
+        Call<List<User>> call = caller.getUsers();
+        call.enqueue(new Callback<List<User>>() {
+            @Override
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                app.setKayzrTeam(response.body());
+                Log.d("Backend Call", " call successful (getTeam)");
+
+            }
+
+            @Override
+            public void onFailure(Call<List<User>> call, Throwable t) {
+                Log.e("Backend CAll", "call failed (getTeam) " + t.getMessage());
+            }
+        });
 
     }
 

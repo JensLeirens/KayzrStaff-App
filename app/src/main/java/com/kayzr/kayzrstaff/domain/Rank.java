@@ -1,4 +1,4 @@
-package com.kayzr.kayzrstaff.Domain;
+package com.kayzr.kayzrstaff.domain;
 
 /**
  * Created by Mafken on 7/09/2017.

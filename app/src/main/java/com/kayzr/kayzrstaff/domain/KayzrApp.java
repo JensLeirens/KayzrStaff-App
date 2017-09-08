@@ -1,4 +1,4 @@
-package com.kayzr.kayzrstaff.Domain;
+package com.kayzr.kayzrstaff.domain;
 
 import android.app.Application;
 

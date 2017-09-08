@@ -6,7 +6,8 @@
               android:background="@color/colorPrimaryDark"
               android:baselineAligned="false"
               android:orientation="vertical"
-              android:weightSum="1">
+              android:weightSum="1"
+              android:layout_marginTop="57dp">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -22,7 +23,7 @@
     </ScrollView>
 
     <android.support.design.widget.TabLayout
-        android:id="@+id/RosterTablayout"
+        android:id="@+id/rosterTablayout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_gravity="bottom"

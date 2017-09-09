@@ -7,7 +7,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface Calls {
 
@@ -17,8 +17,8 @@ public interface Calls {
     @GET("NextWeek/")
     Call<List<Tournament>> getNextWeekTournaments();
 
-    @GET("users/?user={username}")
-    Call<User> getUser(@Path("username") String username);
+    @GET("users/")
+    Call<List<User>> getUser(@Query("user") String username);
 
     @GET("users/")
     Call<List<User>> getUsers();

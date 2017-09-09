@@ -1,13 +1,18 @@
 package com.kayzr.kayzrstaff.adapters;
 
+import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.kayzr.kayzrstaff.MainActivity;
 import com.kayzr.kayzrstaff.R;
+import com.kayzr.kayzrstaff.domain.Role;
 import com.kayzr.kayzrstaff.domain.Tournament;
+import com.kayzr.kayzrstaff.domain.User;
 
 import java.util.List;
 
@@ -17,11 +22,13 @@ import butterknife.ButterKnife;
 public class RosterAdapter extends RecyclerView.Adapter<RosterAdapter.RosterViewHolder> {
 
     private int itemCount;
+    private Context c ;
     private List<Tournament> tournaments;
 
-    public RosterAdapter(List<Tournament> tournaments) {
+    public RosterAdapter(List<Tournament> tournaments, Context c) {
         this.tournaments = tournaments;
         this.itemCount = tournaments.size();
+        this.c = c ;
     }
 
     @Override
@@ -42,6 +49,15 @@ public class RosterAdapter extends RecyclerView.Adapter<RosterAdapter.RosterView
         } else
         {
             mod = tournaments.get(position).getModerator() ;
+        }
+        for(User u : MainActivity.app.getKayzrTeam()){
+            if(tournaments.get(position).getModerator().equals(u.getUsername())){
+                if(u.getRole() == Role.Mod){
+                    rosterCardMod.setTextColor(ContextCompat.getColor(c,R.color.colorMOD));
+                } else {
+                    rosterCardMod.setTextColor(ContextCompat.getColor(c, R.color.colorCM));
+                }
+            }
         }
 
         rosterCardMod.setText(mod);

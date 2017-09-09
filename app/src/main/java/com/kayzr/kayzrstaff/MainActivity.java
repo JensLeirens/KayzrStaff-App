@@ -1,5 +1,6 @@
 package com.kayzr.kayzrstaff;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -13,10 +14,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.kayzr.kayzrstaff.domain.KayzrApp;
 import com.kayzr.kayzrstaff.domain.Tournament;
-import com.kayzr.kayzrstaff.domain.User;
 import com.kayzr.kayzrstaff.fragments.AvailibilitiesFragment;
 import com.kayzr.kayzrstaff.fragments.HomeFragment;
 import com.kayzr.kayzrstaff.fragments.RosterFragment;
@@ -42,7 +44,6 @@ public class MainActivity extends AppCompatActivity
 
     public static KayzrApp app;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,25 +51,23 @@ public class MainActivity extends AppCompatActivity
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
 
+        app = (KayzrApp) getApplicationContext();
+        if(app.getCurrentUser() == null){
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        displaySelectedScreen(R.id.nav_home);
 
-        app = (KayzrApp) getApplicationContext();
-/*        if(app.getCurrentUser() == null){
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-        }*/
-        getThisWeekTournaments();
-        getNextWeekTournaments();
-        getUsersList();
+
+
 
         navigationView.setNavigationItemSelectedListener(this);
     }
-
 
     public void getThisWeekTournaments() {
 
@@ -79,6 +78,7 @@ public class MainActivity extends AppCompatActivity
             public void onResponse(Call<List<Tournament>> call, Response<List<Tournament>> response) {
                 app.setThisWeek(response.body());
                 Log.d("Backend Call", " call successful (ThisWeekTournaments)");
+                displaySelectedScreen(R.id.nav_home);
             }
 
             @Override
@@ -103,26 +103,6 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onFailure(Call<List<Tournament>> call, Throwable t) {
                 Log.e("Backend CAll", "call failed (NextWeekTournaments) " + t.getMessage());
-            }
-        });
-
-    }
-
-    public void getUsersList() {
-
-        Calls caller = Config.getRetrofit().create(Calls.class);
-        Call<List<User>> call = caller.getUsers();
-        call.enqueue(new Callback<List<User>>() {
-            @Override
-            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                app.setKayzrTeam(response.body());
-                Log.d("Backend Call", " call successful (getTeam)");
-
-            }
-
-            @Override
-            public void onFailure(Call<List<User>> call, Throwable t) {
-                Log.e("Backend CAll", "call failed (getTeam) " + t.getMessage());
             }
         });
 
@@ -205,6 +185,18 @@ public class MainActivity extends AppCompatActivity
 
         drawer.closeDrawer(GravityCompat.START);
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(app.getCurrentUser() != null){
+            View navView =  navigationView.getHeaderView(0);
+            TextView username = (TextView)navView.findViewById(R.id.userName);
+            username.setText(MainActivity.app.getCurrentUser().getUsername());
+        }
+        getThisWeekTournaments();
+        getNextWeekTournaments();
     }
 
 }

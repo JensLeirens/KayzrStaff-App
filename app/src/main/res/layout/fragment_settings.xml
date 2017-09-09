@@ -96,7 +96,7 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:textColor="@color/cardview_light_background"
-            android:text="remember username and pasword "
+            android:text="remember username and password "
             android:textSize="16sp" />
 
         <CheckBox

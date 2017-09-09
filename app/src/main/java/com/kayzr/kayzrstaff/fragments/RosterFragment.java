@@ -94,7 +94,7 @@ public class RosterFragment extends Fragment {
             }
         }
 
-        RosterAdapter adapter = new RosterAdapter(tournamentsOfThatDay);
+        RosterAdapter adapter = new RosterAdapter(tournamentsOfThatDay,getContext());
         mRecycler.setAdapter(adapter);
     }
 

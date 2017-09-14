@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:padding="5dp"
+                android:padding="8dp"
                 android:text="ADC wildsquirtle"
                 android:textColor="@android:color/white"/>
 
@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_centerVertical="true"
-                android:padding="5dp"
+                android:padding="8dp"
                 android:text="Jens Leirens"
                 android:textColor="@android:color/white"/>
 

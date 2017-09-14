@@ -17,10 +17,22 @@
 
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/rosterRecycler"/>
+            android:layout_height="wrap_content"
+            android:id="@+id/avRecycler"/>
 
     </ScrollView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:layout_gravity="center"
+        android:text="This is the roster for next week!"
+        android:textColor="@color/colorText"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:id="@+id/avNextWeekInfoText"
+        />
 
     <Button
         android:layout_width="wrap_content"

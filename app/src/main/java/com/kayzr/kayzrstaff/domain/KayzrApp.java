@@ -10,8 +10,27 @@ public class KayzrApp extends Application {
 
     private List<Tournament> thisWeek = new ArrayList<>();
     private List<Tournament> nextWeek = new ArrayList<>();
+    private List<Availability> availabilities = new ArrayList<>();
     private List<User> kayzrTeam = new ArrayList<>();
     private User currentUser ;
+    private EndWeek endOfWeek;
+
+
+    public List<Tournament> getNextWeek() {
+        return nextWeek;
+    }
+
+    public void setNextWeek(List<Tournament> nextWeek) {
+        this.nextWeek = nextWeek;
+    }
+
+    public EndWeek getEndOfWeek() {
+        return endOfWeek;
+    }
+
+    public void setEndOfWeek(EndWeek endOfWeek) {
+        this.endOfWeek = endOfWeek;
+    }
 
     public List<Tournament> getThisWeek() {
         return thisWeek;
@@ -21,12 +40,12 @@ public class KayzrApp extends Application {
         this.thisWeek = thisWeek;
     }
 
-    public List<Tournament> getNextWeek() {
-        return nextWeek;
+    public List<Availability> getAvailabilities() {
+        return availabilities;
     }
 
-    public void setNextWeek(List<Tournament> nextWeek) {
-        this.nextWeek = nextWeek;
+    public void setAvailabilities(List<Availability> availabilities) {
+        this.availabilities = availabilities;
     }
 
     public List<User> getKayzrTeam() {

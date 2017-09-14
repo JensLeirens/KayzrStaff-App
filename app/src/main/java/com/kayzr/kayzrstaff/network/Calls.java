@@ -1,5 +1,7 @@
 package com.kayzr.kayzrstaff.network;
 
+import com.kayzr.kayzrstaff.domain.Availability;
+import com.kayzr.kayzrstaff.domain.EndWeek;
 import com.kayzr.kayzrstaff.domain.Tournament;
 import com.kayzr.kayzrstaff.domain.User;
 
@@ -15,7 +17,11 @@ public interface Calls {
     Call<List<Tournament>> getThisWeekTournaments();
 
     @GET("availabilities/")
-    Call<List<Tournament>> getAvailabilities();
+    Call<List<Availability>> getAvailabilities();
+
+
+    @GET("NextWeek/")
+    Call<List<Tournament>> getNextWeekTournaments();
 
     @GET("users/")
     Call<List<User>> getUser(@Query("user") String username);
@@ -23,9 +29,7 @@ public interface Calls {
     @GET("users/")
     Call<List<User>> getUsers();
 
-    //End Week 0 = Niet einde van de week. Dus availabilities zijn nog open.
-    //End Week 1 = Einde van de Week. Roster Next Week is gemaakt en mensen kunnen geen availabilities meer invullen
-    @GET("EndWeek/")
-    Call<List<Integer>> getEndweek();
+     @GET("EndWeek/")
+    Call<List<EndWeek>> getEndweek();
 
 }

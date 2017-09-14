@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.kayzr.kayzrstaff.domain.User;
 import com.kayzr.kayzrstaff.network.Calls;
@@ -98,6 +99,8 @@ public class LoginActivity extends AppCompatActivity {
                         MainActivity.app.setCurrentUser(currentUser);
                         MainActivity.app.getCurrentUser().setPassword(mPassword);
                         finish();
+                    } else {
+                        Toast.makeText(getApplicationContext(),"Wrong password or username",Toast.LENGTH_LONG).show();
                     }
                 }
 

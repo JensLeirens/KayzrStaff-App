@@ -17,6 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.kayzr.kayzrstaff.domain.Availability;
+import com.kayzr.kayzrstaff.domain.EndWeek;
 import com.kayzr.kayzrstaff.domain.KayzrApp;
 import com.kayzr.kayzrstaff.domain.Tournament;
 import com.kayzr.kayzrstaff.fragments.AvailibilitiesFragment;
@@ -55,16 +57,14 @@ public class MainActivity extends AppCompatActivity
         if(app.getCurrentUser() == null){
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
+        } else {
+            displaySelectedScreen(R.id.nav_home);
         }
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
-
-
-
 
         navigationView.setNavigationItemSelectedListener(this);
     }
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity
             public void onResponse(Call<List<Tournament>> call, Response<List<Tournament>> response) {
                 app.setThisWeek(response.body());
                 Log.d("Backend Call", " call successful (ThisWeekTournaments)");
-                displaySelectedScreen(R.id.nav_home);
+
             }
 
             @Override
@@ -98,6 +98,7 @@ public class MainActivity extends AppCompatActivity
             public void onResponse(Call<List<Tournament>> call, Response<List<Tournament>> response) {
                 app.setNextWeek(response.body());
                 Log.d("Backend Call", " call successful (NextWeekTournaments)");
+
             }
 
             @Override
@@ -106,6 +107,47 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+    }
+
+    public void getAvailabilities() {
+
+        Calls caller = Config.getRetrofit().create(Calls.class);
+        Call<List<Availability>> call = caller.getAvailabilities();
+        call.enqueue(new Callback<List<Availability>>() {
+            @Override
+            public void onResponse(Call<List<Availability>> call, Response<List<Availability>> response) {
+                app.setAvailabilities(response.body());
+                Log.d("Backend Call", " call successful (Availabilities)");
+            }
+
+            @Override
+            public void onFailure(Call<List<Availability>> call, Throwable t) {
+                Log.e("Backend CAll", "call failed (Availabilities) " + t.getMessage());
+            }
+        });
+
+    }
+
+    public void getEndOfWeek() {
+
+        Calls caller = Config.getRetrofit().create(Calls.class);
+        Call<List<EndWeek>> call = caller.getEndweek();
+        call.enqueue(new Callback<List<EndWeek>>() {
+            @Override
+            public void onResponse(Call<List<EndWeek>> call, Response<List<EndWeek>> response) {
+                MainActivity.app.setEndOfWeek(response.body().get(0));
+                Log.d("Backend Call", " call successful (getEndweek)");
+                if(app.getEndOfWeek().getEndWeek() == 1 ) {
+                    getNextWeekTournaments();
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<List<EndWeek>> call, Throwable t) {
+                Log.e("Backend CAll", "call failed (getEndweek) " + t.getMessage());
+            }
+        });
     }
 
 
@@ -194,9 +236,12 @@ public class MainActivity extends AppCompatActivity
             View navView =  navigationView.getHeaderView(0);
             TextView username = (TextView)navView.findViewById(R.id.userName);
             username.setText(MainActivity.app.getCurrentUser().getUsername());
+            displaySelectedScreen(R.id.nav_home);
         }
         getThisWeekTournaments();
-        getNextWeekTournaments();
+        getAvailabilities();
+        getEndOfWeek();
+
     }
 
 }

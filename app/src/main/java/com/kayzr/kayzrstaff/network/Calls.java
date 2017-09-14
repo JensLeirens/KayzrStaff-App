@@ -14,13 +14,18 @@ public interface Calls {
     @GET("thisweek/")
     Call<List<Tournament>> getThisWeekTournaments();
 
-    @GET("NextWeek/")
-    Call<List<Tournament>> getNextWeekTournaments();
+    @GET("availabilities/")
+    Call<List<Tournament>> getAvailabilities();
 
     @GET("users/")
     Call<List<User>> getUser(@Query("user") String username);
 
     @GET("users/")
     Call<List<User>> getUsers();
+
+    //End Week 0 = Niet einde van de week. Dus availabilities zijn nog open.
+    //End Week 1 = Einde van de Week. Roster Next Week is gemaakt en mensen kunnen geen availabilities meer invullen
+    @GET("EndWeek/")
+    Call<List<Integer>> getEndweek();
 
 }

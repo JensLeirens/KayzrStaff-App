@@ -29,7 +29,6 @@
         android:layout_gravity="bottom"
         android:elevation="1dp"
         app:tabTextColor="@android:color/white"
-
         app:tabSelectedTextColor="@color/colorText">
 
         <android.support.design.widget.TabItem

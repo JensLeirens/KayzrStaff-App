@@ -26,8 +26,8 @@
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/cardview_light_background"
-                android:textColorHint="@color/cardview_light_background">
+                android:textColor="@color/colorText"
+                android:textColorHint="@color/colorText">
 
                 <EditText
                     android:id="@+id/LoginUsername"
@@ -35,15 +35,16 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_email"
                     android:inputType="textAutoComplete"
-                    android:maxLines="1"/>
+                    android:maxLines="1"
+                    android:textColor="@color/colorText"/>
 
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/cardview_light_background"
-                android:textColorHint="@color/cardview_light_background">
+                android:textColor="@color/colorText"
+                android:textColorHint="@color/colorText">
 
                 <EditText
                     android:id="@+id/Loginpassword"
@@ -51,7 +52,8 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_password"
                     android:inputType="textPassword"
-                    android:maxLines="1"/>
+                    android:maxLines="1"
+                    android:textColor="@color/colorText"/>
 
             </android.support.design.widget.TextInputLayout>
 

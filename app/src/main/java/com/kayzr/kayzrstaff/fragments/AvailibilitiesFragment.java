@@ -57,6 +57,7 @@ public class AvailibilitiesFragment extends Fragment {
             sendAvailabilities.setVisibility(View.VISIBLE);
         } else {
             //adapter koppelen van roster
+            calculateNextWeekData();
             initializeNextWeekAdapter();
             infoTextNextWeek.setVisibility(View.VISIBLE);
             sendAvailabilities.setVisibility(View.GONE);
@@ -73,6 +74,7 @@ public class AvailibilitiesFragment extends Fragment {
                     initializeAvAdapter();
                     sendAvailabilities.setVisibility(View.VISIBLE);
                 } else {
+                    calculateNextWeekData();
                     initializeNextWeekAdapter();
                     sendAvailabilities.setVisibility(View.GONE);
                 }
@@ -112,6 +114,33 @@ public class AvailibilitiesFragment extends Fragment {
                 if(t.getId() == av.getTournamentId()){
                     av.setTournament(t);
                 }
+            }
+        }
+    }
+
+    private void calculateNextWeekData(){
+        tournamentsOfThatDay.clear();
+
+        String selectedDay = "";
+        if(tabIndex == 0 ){
+            selectedDay = "Maandag";
+        } else if(tabIndex == 1){
+            selectedDay = "Dinsdag";
+        }else if(tabIndex == 2){
+            selectedDay = "Woensdag";
+        }else if(tabIndex == 3){
+            selectedDay = "Donderdag";
+        }else if(tabIndex == 4){
+            selectedDay = "Vrijdag";
+        }else if(tabIndex == 5){
+            selectedDay = "Zaterdag";
+        }else if(tabIndex == 6){
+            selectedDay = "Zondag";
+        }
+
+        for(Tournament t : MainActivity.app.getNextWeek()){
+            if(t.getDag().equals(selectedDay)){
+                tournamentsOfThatDay.add(t);
             }
         }
     }

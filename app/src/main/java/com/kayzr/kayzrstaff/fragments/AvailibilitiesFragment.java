@@ -18,6 +18,7 @@ import com.kayzr.kayzrstaff.R;
 import com.kayzr.kayzrstaff.adapters.AvailabilitiesAdapter;
 import com.kayzr.kayzrstaff.adapters.RosterAdapter;
 import com.kayzr.kayzrstaff.domain.Availability;
+import com.kayzr.kayzrstaff.domain.KayzrApp;
 import com.kayzr.kayzrstaff.domain.Tournament;
 
 import java.util.ArrayList;
@@ -35,9 +36,11 @@ public class AvailibilitiesFragment extends Fragment {
     @BindView(R.id.sendAvailabilities) Button sendAvailabilities;
     @BindView(R.id.avRecycler) RecyclerView mRecycler;
     @BindView(R.id.avNextWeekInfoText)TextView infoTextNextWeek;
-    //todo make the first index go to the current day of the week
-    private int tabIndex = 0 ;
+
+
+    private int tabIndex;
     private List<Tournament> tournamentsOfThatDay = new ArrayList<>();
+    private KayzrApp app;
 
     @Nullable
     @Override
@@ -47,6 +50,7 @@ public class AvailibilitiesFragment extends Fragment {
 
         //lijst van tournamenten voor die dag maken
         initializeAdapterData();
+        setCurrentDayAsDefault();
         //End Week 0 = Niet einde van de week. Dus availabilities zijn nog open.
         //End Week 1 = Einde van de Week. Roster Next Week is gemaakt en mensen kunnen geen availabilities meer invullen
         if(MainActivity.app.getEndOfWeek().getEndWeek() == 0 ){
@@ -120,8 +124,10 @@ public class AvailibilitiesFragment extends Fragment {
 
     private void calculateNextWeekData(){
         tournamentsOfThatDay.clear();
+        app = new KayzrApp();
+        String selectedDay = app.dayOfWeek();
 
-        String selectedDay = "";
+        /*String selectedDay = "";
         if(tabIndex == 0 ){
             selectedDay = "Maandag";
         } else if(tabIndex == 1){
@@ -136,7 +142,7 @@ public class AvailibilitiesFragment extends Fragment {
             selectedDay = "Zaterdag";
         }else if(tabIndex == 6){
             selectedDay = "Zondag";
-        }
+        }*/
 
         for(Tournament t : MainActivity.app.getNextWeek()){
             if(t.getDag().equals(selectedDay)){
@@ -159,9 +165,9 @@ public class AvailibilitiesFragment extends Fragment {
 
     private void initializeAdapterData(){
         tournamentsOfThatDay.clear();
-
-        String selectedDay = "";
-        if(tabIndex == 0 ){
+        app = new KayzrApp();
+        String selectedDay = app.dayOfWeek();
+        /*if(tabIndex == 0 ){
             selectedDay = "Maandag";
         } else if(tabIndex == 1){
             selectedDay = "Dinsdag";
@@ -175,7 +181,7 @@ public class AvailibilitiesFragment extends Fragment {
             selectedDay = "Zaterdag";
         }else if(tabIndex == 6){
             selectedDay = "Zondag";
-        }
+        }*/
 
         for(Tournament t : MainActivity.app.getThisWeek()){
             if(t.getDag().equals(selectedDay)){
@@ -184,6 +190,13 @@ public class AvailibilitiesFragment extends Fragment {
         }
     }
 
+    public void setCurrentDayAsDefault(){
+        KayzrApp app = new KayzrApp();
+        int tab = app.currentDayOfWeek();
+
+        mTablayout.getTabAt(tab).select();
+
+    }
     @OnClick(R.id.sendAvailabilities)
     public void sendAvailabilities(){
         Toast.makeText(getContext(),"Sorry this feature is currently not implemented ",Toast.LENGTH_LONG).show();

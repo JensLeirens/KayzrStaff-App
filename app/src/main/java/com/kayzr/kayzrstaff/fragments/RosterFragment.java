@@ -9,17 +9,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.kayzr.kayzrstaff.MainActivity;
 import com.kayzr.kayzrstaff.R;
 import com.kayzr.kayzrstaff.adapters.RosterAdapter;
-import com.kayzr.kayzrstaff.domain.KayzrApp;
 import com.kayzr.kayzrstaff.domain.Tournament;
-
 import java.util.ArrayList;
-
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -32,15 +27,7 @@ public class RosterFragment extends Fragment {
     protected RecyclerView.LayoutManager mLayoutManager;
     private List<Tournament> tournaments = new ArrayList<>();
     private int tabIndex;
-    private KayzrApp app;
 
-    public void setCurrentDayAsDefault(){
-        KayzrApp app = new KayzrApp();
-        int tab = app.currentDayOfWeek();
-
-        mTablayout.getTabAt(tab).select();
-
-    }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -48,14 +35,15 @@ public class RosterFragment extends Fragment {
         ButterKnife.bind(this, v);
 
         initdata();
-        initializeAdapter();
+
         setCurrentDayAsDefault();
 
         mTablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 tabIndex = tab.getPosition(); // 0 = monday, 1 = dinsdag, 2 = woendag ...
-                initializeAdapter();
+                //get String from tabindex
+                initializeAdapter(MainActivity.app.dayOfWeek(tabIndex));//insertstring
             }
 
             @Override
@@ -76,13 +64,20 @@ public class RosterFragment extends Fragment {
         return v;
     }
 
-    private void initializeAdapter(){
+    public void setCurrentDayAsDefault(){
+
+        int tab = MainActivity.app.currentDayOfWeek();
+        initializeAdapter(MainActivity.app.dayOfWeek(tab));
+        mTablayout.getTabAt(tab).select();
+
+    }
+
+    private void initializeAdapter(String dayOfWeek){
         List<Tournament> tournamentsOfThatDay = new ArrayList<>();
-        app = new KayzrApp();
-        String selectedDay = app.dayOfWeek();
+
 
         for(Tournament t : tournaments){
-            if(t.getDag().equals(selectedDay)){
+            if(t.getDag().equals(dayOfWeek)){
                 tournamentsOfThatDay.add(t);
             }
         }

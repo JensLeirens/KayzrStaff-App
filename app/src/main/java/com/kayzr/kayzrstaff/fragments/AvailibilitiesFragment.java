@@ -41,15 +41,14 @@ public class AvailibilitiesFragment extends Fragment {
     private int tabIndex;
     private List<Tournament> tournamentsOfThatDay = new ArrayList<>();
     private KayzrApp app;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_availabilities, container, false);
         ButterKnife.bind(this, v);
 
+
         //lijst van tournamenten voor die dag maken
-        initializeAdapterData();
         setCurrentDayAsDefault();
         //End Week 0 = Niet einde van de week. Dus availabilities zijn nog open.
         //End Week 1 = Einde van de Week. Roster Next Week is gemaakt en mensen kunnen geen availabilities meer invullen
@@ -72,7 +71,7 @@ public class AvailibilitiesFragment extends Fragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 tabIndex = tab.getPosition(); // 0 = monday, 1 = dinsdag, 2 = woendag ...
-                initializeAdapterData();
+                initializeAdapterData(MainActivity.app.dayOfWeek(tabIndex));
                 if(MainActivity.app.getEndOfWeek().getEndWeek() == 0 ){
                     calculateData();
                     initializeAvAdapter();
@@ -123,26 +122,10 @@ public class AvailibilitiesFragment extends Fragment {
     }
 
     private void calculateNextWeekData(){
-        tournamentsOfThatDay.clear();
-        app = new KayzrApp();
-        String selectedDay = app.dayOfWeek();
 
-        /*String selectedDay = "";
-        if(tabIndex == 0 ){
-            selectedDay = "Maandag";
-        } else if(tabIndex == 1){
-            selectedDay = "Dinsdag";
-        }else if(tabIndex == 2){
-            selectedDay = "Woensdag";
-        }else if(tabIndex == 3){
-            selectedDay = "Donderdag";
-        }else if(tabIndex == 4){
-            selectedDay = "Vrijdag";
-        }else if(tabIndex == 5){
-            selectedDay = "Zaterdag";
-        }else if(tabIndex == 6){
-            selectedDay = "Zondag";
-        }*/
+        tournamentsOfThatDay.clear();
+
+        String selectedDay = app.dayOfWeek(MainActivity.app.currentDayOfWeek());
 
         for(Tournament t : MainActivity.app.getNextWeek()){
             if(t.getDag().equals(selectedDay)){
@@ -163,37 +146,20 @@ public class AvailibilitiesFragment extends Fragment {
         mRecycler.setAdapter(adapter);
     }
 
-    private void initializeAdapterData(){
+    private void initializeAdapterData(String dayOfWeek){
         tournamentsOfThatDay.clear();
-        app = new KayzrApp();
-        String selectedDay = app.dayOfWeek();
-        /*if(tabIndex == 0 ){
-            selectedDay = "Maandag";
-        } else if(tabIndex == 1){
-            selectedDay = "Dinsdag";
-        }else if(tabIndex == 2){
-            selectedDay = "Woensdag";
-        }else if(tabIndex == 3){
-            selectedDay = "Donderdag";
-        }else if(tabIndex == 4){
-            selectedDay = "Vrijdag";
-        }else if(tabIndex == 5){
-            selectedDay = "Zaterdag";
-        }else if(tabIndex == 6){
-            selectedDay = "Zondag";
-        }*/
 
         for(Tournament t : MainActivity.app.getThisWeek()){
-            if(t.getDag().equals(selectedDay)){
+            if(t.getDag().equals(dayOfWeek)){
                 tournamentsOfThatDay.add(t);
             }
         }
     }
 
     public void setCurrentDayAsDefault(){
-        KayzrApp app = new KayzrApp();
+        app = MainActivity.app;
         int tab = app.currentDayOfWeek();
-
+        initializeAdapterData(MainActivity.app.dayOfWeek(tab));
         mTablayout.getTabAt(tab).select();
 
     }

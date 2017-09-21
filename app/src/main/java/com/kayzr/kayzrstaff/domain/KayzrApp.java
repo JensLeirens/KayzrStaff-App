@@ -1,14 +1,8 @@
 package com.kayzr.kayzrstaff.domain;
 
 import android.app.Application;
-import android.widget.TableLayout;
-
-import com.kayzr.kayzrstaff.fragments.RosterFragment;
-
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -21,7 +15,7 @@ public class KayzrApp extends Application {
     private List<User> kayzrTeam = new ArrayList<>();
     private User currentUser ;
     private EndWeek endOfWeek;
-
+    private int tabIndex;
 
     public List<Tournament> getNextWeek() {
         return nextWeek;
@@ -72,9 +66,6 @@ public class KayzrApp extends Application {
     }
 
 
-    /*selecting default (current)day of the week */
-    private int tabIndex;
-
     public int currentDeviceDay(){//neemt de huidige dag vd week vh toestel
         GregorianCalendar calendar = new GregorianCalendar();
         return calendar.get(Calendar.DAY_OF_WEEK);
@@ -108,21 +99,21 @@ public class KayzrApp extends Application {
         }
         return tabIndex;
     }
-    public String dayOfWeek(){
+    public String dayOfWeek(int i){
         String selectedDay = "";
-        if(tabIndex == 0 ){
+        if(i == 0 ){
             selectedDay = "Maandag";
-        } else if(tabIndex == 1){
+        } else if(i == 1){
             selectedDay = "Dinsdag";
-        }else if(tabIndex == 2){
+        }else if(i == 2){
             selectedDay = "Woensdag";
-        }else if(tabIndex == 3){
+        }else if(i == 3){
             selectedDay = "Donderdag";
-        }else if(tabIndex == 4){
+        }else if(i == 4){
             selectedDay = "Vrijdag";
-        }else if(tabIndex == 5){
+        }else if(i == 5){
             selectedDay = "Zaterdag";
-        }else if(tabIndex == 6){
+        }else if(i == 6){
             selectedDay = "Zondag";
         }
         return selectedDay;

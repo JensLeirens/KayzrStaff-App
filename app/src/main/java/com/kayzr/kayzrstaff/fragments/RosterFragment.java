@@ -9,15 +9,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.kayzr.kayzrstaff.MainActivity;
 import com.kayzr.kayzrstaff.R;
 import com.kayzr.kayzrstaff.adapters.RosterAdapter;
 import com.kayzr.kayzrstaff.domain.Tournament;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -29,9 +26,7 @@ public class RosterFragment extends Fragment {
 
     protected RecyclerView.LayoutManager mLayoutManager;
     private List<Tournament> tournaments = new ArrayList<>();
-
-    //todo make the first index go to the current day of the week
-    private int tabIndex = 0 ;
+    private int tabIndex;
 
     @Nullable
     @Override
@@ -40,13 +35,15 @@ public class RosterFragment extends Fragment {
         ButterKnife.bind(this, v);
 
         initdata();
-        initializeAdapter();
+
+        setCurrentDayAsDefault();
 
         mTablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 tabIndex = tab.getPosition(); // 0 = monday, 1 = dinsdag, 2 = woendag ...
-                initializeAdapter();
+                //get String from tabindex
+                initializeAdapter(MainActivity.app.dayOfWeek(tabIndex));//insertstring
             }
 
             @Override
@@ -64,32 +61,23 @@ public class RosterFragment extends Fragment {
         mRecycler.setLayoutManager(mLayoutManager);
 
 
-
-
         return v;
     }
 
-    private void initializeAdapter(){
+    public void setCurrentDayAsDefault(){
+
+        int tab = MainActivity.app.currentDayOfWeek();
+        initializeAdapter(MainActivity.app.dayOfWeek(tab));
+        mTablayout.getTabAt(tab).select();
+
+    }
+
+    private void initializeAdapter(String dayOfWeek){
         List<Tournament> tournamentsOfThatDay = new ArrayList<>();
-        String selectedDay = "";
-        if(tabIndex == 0 ){
-            selectedDay = "Maandag";
-        } else if(tabIndex == 1){
-            selectedDay = "Dinsdag";
-        }else if(tabIndex == 2){
-            selectedDay = "Woensdag";
-        }else if(tabIndex == 3){
-            selectedDay = "Donderdag";
-        }else if(tabIndex == 4){
-            selectedDay = "Vrijdag";
-        }else if(tabIndex == 5){
-            selectedDay = "Zaterdag";
-        }else if(tabIndex == 6){
-            selectedDay = "Zondag";
-        }
+
 
         for(Tournament t : tournaments){
-            if(t.getDag().equals(selectedDay)){
+            if(t.getDag().equals(dayOfWeek)){
                 tournamentsOfThatDay.add(t);
             }
         }

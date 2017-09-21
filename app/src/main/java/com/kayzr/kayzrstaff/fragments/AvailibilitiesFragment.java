@@ -18,6 +18,7 @@ import com.kayzr.kayzrstaff.R;
 import com.kayzr.kayzrstaff.adapters.AvailabilitiesAdapter;
 import com.kayzr.kayzrstaff.adapters.RosterAdapter;
 import com.kayzr.kayzrstaff.domain.Availability;
+import com.kayzr.kayzrstaff.domain.KayzrApp;
 import com.kayzr.kayzrstaff.domain.Tournament;
 
 import java.util.ArrayList;
@@ -35,18 +36,20 @@ public class AvailibilitiesFragment extends Fragment {
     @BindView(R.id.sendAvailabilities) Button sendAvailabilities;
     @BindView(R.id.avRecycler) RecyclerView mRecycler;
     @BindView(R.id.avNextWeekInfoText)TextView infoTextNextWeek;
-    //todo make the first index go to the current day of the week
-    private int tabIndex = 0 ;
-    private List<Tournament> tournamentsOfThatDay = new ArrayList<>();
 
+
+    private int tabIndex;
+    private List<Tournament> tournamentsOfThatDay = new ArrayList<>();
+    private KayzrApp app;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_availabilities, container, false);
         ButterKnife.bind(this, v);
 
+
         //lijst van tournamenten voor die dag maken
-        initializeAdapterData();
+        setCurrentDayAsDefault();
         //End Week 0 = Niet einde van de week. Dus availabilities zijn nog open.
         //End Week 1 = Einde van de Week. Roster Next Week is gemaakt en mensen kunnen geen availabilities meer invullen
         if(MainActivity.app.getEndOfWeek().getEndWeek() == 0 ){
@@ -68,7 +71,7 @@ public class AvailibilitiesFragment extends Fragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 tabIndex = tab.getPosition(); // 0 = monday, 1 = dinsdag, 2 = woendag ...
-                initializeAdapterData();
+                initializeAdapterData(MainActivity.app.dayOfWeek(tabIndex));
                 if(MainActivity.app.getEndOfWeek().getEndWeek() == 0 ){
                     calculateData();
                     initializeAvAdapter();
@@ -119,24 +122,10 @@ public class AvailibilitiesFragment extends Fragment {
     }
 
     private void calculateNextWeekData(){
+
         tournamentsOfThatDay.clear();
 
-        String selectedDay = "";
-        if(tabIndex == 0 ){
-            selectedDay = "Maandag";
-        } else if(tabIndex == 1){
-            selectedDay = "Dinsdag";
-        }else if(tabIndex == 2){
-            selectedDay = "Woensdag";
-        }else if(tabIndex == 3){
-            selectedDay = "Donderdag";
-        }else if(tabIndex == 4){
-            selectedDay = "Vrijdag";
-        }else if(tabIndex == 5){
-            selectedDay = "Zaterdag";
-        }else if(tabIndex == 6){
-            selectedDay = "Zondag";
-        }
+        String selectedDay = app.dayOfWeek(MainActivity.app.currentDayOfWeek());
 
         for(Tournament t : MainActivity.app.getNextWeek()){
             if(t.getDag().equals(selectedDay)){
@@ -157,33 +146,23 @@ public class AvailibilitiesFragment extends Fragment {
         mRecycler.setAdapter(adapter);
     }
 
-    private void initializeAdapterData(){
+    private void initializeAdapterData(String dayOfWeek){
         tournamentsOfThatDay.clear();
 
-        String selectedDay = "";
-        if(tabIndex == 0 ){
-            selectedDay = "Maandag";
-        } else if(tabIndex == 1){
-            selectedDay = "Dinsdag";
-        }else if(tabIndex == 2){
-            selectedDay = "Woensdag";
-        }else if(tabIndex == 3){
-            selectedDay = "Donderdag";
-        }else if(tabIndex == 4){
-            selectedDay = "Vrijdag";
-        }else if(tabIndex == 5){
-            selectedDay = "Zaterdag";
-        }else if(tabIndex == 6){
-            selectedDay = "Zondag";
-        }
-
         for(Tournament t : MainActivity.app.getThisWeek()){
-            if(t.getDag().equals(selectedDay)){
+            if(t.getDag().equals(dayOfWeek)){
                 tournamentsOfThatDay.add(t);
             }
         }
     }
 
+    public void setCurrentDayAsDefault(){
+        app = MainActivity.app;
+        int tab = app.currentDayOfWeek();
+        initializeAdapterData(MainActivity.app.dayOfWeek(tab));
+        mTablayout.getTabAt(tab).select();
+
+    }
     @OnClick(R.id.sendAvailabilities)
     public void sendAvailabilities(){
         Toast.makeText(getContext(),"Sorry this feature is currently not implemented ",Toast.LENGTH_LONG).show();

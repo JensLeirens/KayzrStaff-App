@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_settings"
-        android:icon="@mipmap/settings"
+        android:icon="@drawable/ic_settings"
         android:orderInCategory="101"
         android:title="@string/action_settings"
-        app:showAsAction="never" />
+        app:showAsAction="always" />
     <!--android:title="@string/action_settings"-->
 </menu>

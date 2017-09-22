@@ -33,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.Loginpassword) EditText mPassword;
     @BindView(R.id.signIn) Button signin ;
     public User currentUser ;
+    public static boolean leave = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +58,18 @@ public class LoginActivity extends AppCompatActivity {
         task.doInBackground();
     }
 
-    static String sha256(String input) throws NoSuchAlgorithmException {
+    @Override
+    public void onBackPressed() {
+        Log.d("LoginActivity", "onBackPressed Called");
+        if(leave){
+            finish();
+        }else{
+            Toast.makeText(getApplicationContext(), "if you want to exit press Back again!",Toast.LENGTH_LONG).show();
+            leave = true ;
+        }
+    }
+
+    private static String sha256(String input) throws NoSuchAlgorithmException {
         MessageDigest mDigest = MessageDigest.getInstance("SHA256");
         byte[] result = mDigest.digest(input.getBytes());
         StringBuffer sb = new StringBuffer();

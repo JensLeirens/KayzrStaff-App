@@ -30,7 +30,7 @@
             android:textSize="16sp" />
 
         <CheckBox
-            android:id="@+id/sendReminders"
+            android:id="@+id/settingsNotificationsModDay"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_alignParentEnd="true"
@@ -67,7 +67,7 @@
             android:textSize="16sp" />
 
         <CheckBox
-            android:id="@+id/otherSetting"
+            android:id="@+id/settingsNotificationsAvailabilities"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_alignParentEnd="true"
@@ -102,7 +102,7 @@
             android:textSize="16sp" />
 
         <CheckBox
-            android:id="@+id/otherSetting2"
+            android:id="@+id/settingsUsernameAndPass"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_alignParentEnd="true"
@@ -112,13 +112,4 @@
             android:button="@null" />
 
     </RelativeLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="UNDER CONSTRUCTION! AKA ''TBI''"
-        android:textColor="@color/colorText"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        android:layout_gravity="center"/>
 </LinearLayout>

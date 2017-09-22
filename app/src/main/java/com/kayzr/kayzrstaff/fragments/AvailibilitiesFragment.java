@@ -126,7 +126,7 @@ public class AvailibilitiesFragment extends Fragment {
         tournamentsOfThatDay.clear();
 
         String selectedDay = app.dayOfWeek(MainActivity.app.currentDayOfWeek());
-
+        //TODO if the call returns null  the app crashes here, FIX!
         for(Tournament t : MainActivity.app.getNextWeek()){
             if(t.getDag().equals(selectedDay)){
                 tournamentsOfThatDay.add(t);

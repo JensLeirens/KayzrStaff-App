@@ -54,12 +54,6 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         app = (KayzrApp) getApplicationContext();
-        if(app.getCurrentUser() == null){
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-        } else {
-            displaySelectedScreen(R.id.nav_home);
-        }
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -232,16 +226,29 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onResume() {
         super.onResume();
+        //if there is no user
+
         if(app.getCurrentUser() != null){
+            getThisWeekTournaments();
+            getAvailabilities();
+            getEndOfWeek();
+
             View navView =  navigationView.getHeaderView(0);
             TextView username = (TextView)navView.findViewById(R.id.userName);
             username.setText(MainActivity.app.getCurrentUser().getUsername());
             displaySelectedScreen(R.id.nav_home);
+        }else {
+            //if no user logged in then close the app
+            if(!LoginActivity.leave) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+            }else
+            {
+                finish();
+                //killing the application violently but effectively
+                System.exit(0);
+            }
         }
-        getThisWeekTournaments();
-        getAvailabilities();
-        getEndOfWeek();
-
     }
 
 }

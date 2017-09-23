@@ -1,6 +1,7 @@
 package com.kayzr.kayzrstaff;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -18,9 +19,11 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.kayzr.kayzrstaff.domain.Availability;
+import com.kayzr.kayzrstaff.domain.DaoSession;
 import com.kayzr.kayzrstaff.domain.EndWeek;
 import com.kayzr.kayzrstaff.domain.KayzrApp;
 import com.kayzr.kayzrstaff.domain.Tournament;
+import com.kayzr.kayzrstaff.domain.UserDao;
 import com.kayzr.kayzrstaff.fragments.AvailibilitiesFragment;
 import com.kayzr.kayzrstaff.fragments.HomeFragment;
 import com.kayzr.kayzrstaff.fragments.RosterFragment;
@@ -40,9 +43,12 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    @BindView(R.id.toolbar)Toolbar toolbar;
-    @BindView(R.id.drawer_layout) DrawerLayout drawer;
-    @BindView(R.id.nav_view)NavigationView navigationView;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout drawer;
+    @BindView(R.id.nav_view)
+    NavigationView navigationView;
 
     public static KayzrApp app;
 
@@ -131,7 +137,7 @@ public class MainActivity extends AppCompatActivity
             public void onResponse(Call<List<EndWeek>> call, Response<List<EndWeek>> response) {
                 MainActivity.app.setEndOfWeek(response.body().get(0));
                 Log.d("Backend Call", " call successful (getEndweek)");
-                if(app.getEndOfWeek().getEndWeek() == 1 ) {
+                if (app.getEndOfWeek().getEndWeek() == 1) {
                     getNextWeekTournaments();
                 }
             }
@@ -200,15 +206,19 @@ public class MainActivity extends AppCompatActivity
         if (itemId == R.id.nav_home) {
             fragment = new HomeFragment();
             toolbar.setTitle("KayzrStaff");
+            navigationView.getMenu().getItem(0).setChecked(true);
         } else if (itemId == R.id.nav_this_week) {
             fragment = new RosterFragment();
             toolbar.setTitle("This week");
+            navigationView.getMenu().getItem(1).setChecked(true);
         } else if (itemId == R.id.nav_availabilities) {
             fragment = new AvailibilitiesFragment();
             toolbar.setTitle("Availibilities");
+            navigationView.getMenu().getItem(2).setChecked(true);
         } else if (itemId == R.id.nav_team_info) {
             fragment = new TeamInfoFragment();
             toolbar.setTitle("Team Info");
+            navigationView.getMenu().getItem(3).setChecked(true);
         }
 
         // Replace the fragment.
@@ -226,28 +236,86 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onResume() {
         super.onResume();
-        //if there is no user
+        // als er NOG GEEN current user is dan moeten we deze gaan ophalen
+        if (app.getCurrentUser() == null) {
+            // haal de user asynchroon uit de database
+            new GetData().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            //we hebben al een user dus we kunnen hem meteen laten inloggen
+            checkNoUser();
+        }
 
-        if(app.getCurrentUser() != null){
+    }
+
+    public void checkNoUser() {
+        // check if the user is logged in
+        if (app.getCurrentUser().isLoggedOn()) {
+            //maak de api calls
             getThisWeekTournaments();
             getAvailabilities();
             getEndOfWeek();
 
-            View navView =  navigationView.getHeaderView(0);
-            TextView username = (TextView)navView.findViewById(R.id.userName);
+            //zet de username in de sidebar
+            View navView = navigationView.getHeaderView(0);
+            TextView username = (TextView) navView.findViewById(R.id.userName);
             username.setText(MainActivity.app.getCurrentUser().getUsername());
+
+            //ga naar het homescherm
             displaySelectedScreen(R.id.nav_home);
-        }else {
+        } else {
             //if no user logged in then close the app
-            if(!LoginActivity.leave) {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
-            }else
-            {
+            if (!LoginActivity.leave) {
+                Intent intent2 = new Intent(this, LoginActivity.class);
+                startActivity(intent2);
+            } else {
                 finish();
                 //killing the application violently but effectively
                 System.exit(0);
             }
+        }
+    }
+
+    @Override
+    public void onStop() {
+        //als er een user is sla deze op!
+        if (app.getCurrentUser() != null) {
+            // asynchroon oplsaan!
+            new SaveData().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+        super.onStop();
+    }
+
+    private class SaveData extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            //deze methode slaat de user op in de DB
+            DaoSession daosesion = app.getDaoSession();
+            UserDao userDao = daosesion.getUserDao();
+            // eerste gaan we alle vorige users deleten
+            //( want we willen alleen de current user opslaan geen andere)
+            userDao.deleteAll();
+            //nu gaan we de current user inserten in de database
+            userDao.insert(app.getCurrentUser());
+
+            return null;
+
+        }
+    }
+
+    private class GetData extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params) {
+            // deze methode haalt de user uit de database
+            DaoSession daosesion = app.getDaoSession();
+            UserDao userDao = daosesion.getUserDao();
+            app.setCurrentUser(userDao.loadAll().get(0));
+            app.getCurrentUser().setLoggedOn(false);
+
+            //als de user uit de DB is gaan we de controle starten voor de user in te loggen
+            checkNoUser();
+            return null;
+
         }
     }
 

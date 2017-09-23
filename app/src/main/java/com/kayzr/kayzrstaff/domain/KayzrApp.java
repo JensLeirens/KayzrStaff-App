@@ -1,6 +1,9 @@
 package com.kayzr.kayzrstaff.domain;
 
 import android.app.Application;
+
+import org.greenrobot.greendao.database.Database;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -16,6 +19,25 @@ public class KayzrApp extends Application {
     private User currentUser ;
     private EndWeek endOfWeek;
     private int tabIndex;
+
+    private DaoSession daoSession;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "KayzrStaff-db");
+        Database db = helper.getWritableDb();
+        daoSession = new DaoMaster(db).newSession();
+    }
+
+
+    public DaoSession getDaoSession() {
+        return daoSession;
+    }
+
+    public void setDaoSession(DaoSession daoSession) {
+        this.daoSession = daoSession;
+    }
 
     public List<Tournament> getNextWeek() {
         return nextWeek;

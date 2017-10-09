@@ -87,11 +87,15 @@ public class AvailibilitiesFragment extends Fragment {
                 if(MainActivity.app.getEndOfWeek().getEndWeek() == 0 ){
                     calculateData();
                     initializeAvAdapter();
+                    infoTextNextWeek.setVisibility(View.GONE);
                     sendAvailabilities.setVisibility(View.VISIBLE);
+                    clearAvailabilities.setVisibility(View.VISIBLE);
                 } else {
                     calculateNextWeekData();
                     initializeNextWeekAdapter();
+                    infoTextNextWeek.setVisibility(View.VISIBLE);
                     sendAvailabilities.setVisibility(View.GONE);
+                    clearAvailabilities.setVisibility(View.GONE);
                 }
             }
 

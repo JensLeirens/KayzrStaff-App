@@ -7,6 +7,10 @@ package com.kayzr.kayzrstaff.domain;
 public class EndWeek {
     private int endWeek;
 
+    public EndWeek(int endWeek) {
+        this.endWeek = endWeek;
+    }
+
     public int getEndWeek() {
         return endWeek;
     }

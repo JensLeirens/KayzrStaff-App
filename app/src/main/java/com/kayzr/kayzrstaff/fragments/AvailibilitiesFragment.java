@@ -61,22 +61,7 @@ public class AvailibilitiesFragment extends Fragment {
         setCurrentDayAsDefault();
         //End Week 0 = Niet einde van de week. Dus availabilities zijn nog open.
         //End Week 1 = Einde van de Week. Roster Next Week is gemaakt en mensen kunnen geen availabilities meer invullen
-        if(MainActivity.app.getEndOfWeek().getEndWeek() == 0 ){
-            //data bereken voor availabilty en juiste adapter koppelen
-            calculateData();
-            initializeAvAdapter();
-            infoTextNextWeek.setVisibility(View.GONE);
-            sendAvailabilities.setVisibility(View.VISIBLE);
-            clearAvailabilities.setVisibility(View.VISIBLE);
-        } else {
-            //adapter koppelen van roster
-            calculateNextWeekData();
-            initializeNextWeekAdapter();
-            infoTextNextWeek.setVisibility(View.VISIBLE);
-            sendAvailabilities.setVisibility(View.GONE);
-            clearAvailabilities.setVisibility(View.GONE);
 
-        }
 
 
         mTablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -84,19 +69,7 @@ public class AvailibilitiesFragment extends Fragment {
             public void onTabSelected(TabLayout.Tab tab) {
                 tabIndex = tab.getPosition(); // 0 = monday, 1 = dinsdag, 2 = woendag ...
                 initializeAdapterData(MainActivity.app.dayOfWeek(tabIndex));
-                if(MainActivity.app.getEndOfWeek().getEndWeek() == 0 ){
-                    calculateData();
-                    initializeAvAdapter();
-                    infoTextNextWeek.setVisibility(View.GONE);
-                    sendAvailabilities.setVisibility(View.VISIBLE);
-                    clearAvailabilities.setVisibility(View.VISIBLE);
-                } else {
-                    calculateNextWeekData();
-                    initializeNextWeekAdapter();
-                    infoTextNextWeek.setVisibility(View.VISIBLE);
-                    sendAvailabilities.setVisibility(View.GONE);
-                    clearAvailabilities.setVisibility(View.GONE);
-                }
+                checkWeek();
             }
 
             @Override
@@ -114,6 +87,25 @@ public class AvailibilitiesFragment extends Fragment {
         mRecycler.setLayoutManager(mLayoutManager);
 
         return v;
+    }
+
+    private void checkWeek(){
+        if(MainActivity.app.getEndOfWeek().getEndWeek() == 0 ){
+            //data bereken voor availabilty en juiste adapter koppelen
+            calculateData();
+            initializeAvAdapter();
+            infoTextNextWeek.setVisibility(View.GONE);
+            sendAvailabilities.setVisibility(View.VISIBLE);
+            clearAvailabilities.setVisibility(View.VISIBLE);
+        } else {
+            //adapter koppelen van roster
+            calculateNextWeekData();
+            initializeNextWeekAdapter();
+            infoTextNextWeek.setVisibility(View.VISIBLE);
+            sendAvailabilities.setVisibility(View.GONE);
+            clearAvailabilities.setVisibility(View.GONE);
+
+        }
     }
 
     private void calculateData(){
@@ -228,12 +220,23 @@ public class AvailibilitiesFragment extends Fragment {
 
                 if(amountOfAvailabiltiesSend == totalAmountOfAVSend) {
                     Toast.makeText(getContext(), "Succesfully send " + amountOfAvailabiltiesSend + " availabilities", Toast.LENGTH_LONG).show();
+                } else {
+                    MainActivity.app.getAvailabilities().clear();
+                    checkWeek();
+                    Toast.makeText(getContext(),"Please recheck your availabilities and clear them before sending. TRY another time! Please contact Mafken!",Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<List<JsonResponse>> call, Throwable t) {
                 Log.e("Backend CAll", "call failed (send Availabilities) " + t.getMessage());
+                if(amountOfAvailabiltiesSend == totalAmountOfAVSend) {
+                    Toast.makeText(getContext(), "Succesfully send " + amountOfAvailabiltiesSend + " availabilities", Toast.LENGTH_LONG).show();
+                } else {
+                    MainActivity.app.getAvailabilities().clear();
+                    checkWeek();
+                    Toast.makeText(getContext(),"Please recheck your availabilities and clear them before sending. TRY another time! Please contact Mafken!",Toast.LENGTH_LONG).show();
+                }
             }
         });
     }

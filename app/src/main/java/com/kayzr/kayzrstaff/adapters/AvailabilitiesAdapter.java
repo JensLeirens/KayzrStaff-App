@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.kayzr.kayzrstaff.MainActivity;
@@ -34,11 +35,11 @@ public class AvailabilitiesAdapter extends RecyclerView.Adapter<AvailabilitiesAd
     }
 
     @Override
-    public void onBindViewHolder(AvailabilitiesViewHolder holder, int position) {
+    public void onBindViewHolder(final AvailabilitiesViewHolder holder, final int position) {
         TextView avCardHour = holder.avCardHour;
         TextView avCardtournament = holder.avCardtournament;
         CheckBox avBeschikbaar = holder.avBeschikbaar;
-
+        final int pos = holder.getAdapterPosition();
         avCardHour.setText(tournaments.get(position).getUur());
         avCardtournament.setText(tournaments.get(position).getNaamkort());
 
@@ -48,6 +49,27 @@ public class AvailabilitiesAdapter extends RecyclerView.Adapter<AvailabilitiesAd
                 avBeschikbaar.setChecked(av.isChecked());
             }
         }
+
+        avBeschikbaar.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b ) {
+                Availability av = new Availability(MainActivity.app.getCurrentUser().getUsername(), tournaments.get(pos).getId());
+                if(b) {
+                    if (!MainActivity.app.getAvailabilities().contains(av)) {
+                        MainActivity.app.getAvailabilities().add(av);
+                    }
+                } else {
+
+                   for( Availability todelete: MainActivity.app.getAvailabilities()){
+                       if( todelete.getTournamentId() == av.getTournamentId()){
+                           av = todelete;
+                       }
+                   }
+                   MainActivity.app.getAvailabilities().remove(av);
+
+                }
+            }
+        });
 
     }
 

@@ -1,5 +1,8 @@
 package com.kayzr.kayzrstaff.adapters;
 
+import android.content.Context;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,10 +25,11 @@ public class AvailabilitiesAdapter extends RecyclerView.Adapter<AvailabilitiesAd
 
     private int itemCount;
     private List<Tournament> tournaments;
-
-    public AvailabilitiesAdapter(List<Tournament> tournaments) {
+    private Context c;
+    public AvailabilitiesAdapter(List<Tournament> tournaments, Context c) {
         this.tournaments = tournaments;
-        this.itemCount = tournaments.size();
+        this.itemCount = this.tournaments.size() ;
+        this.c = c;
     }
 
     @Override
@@ -39,9 +43,10 @@ public class AvailabilitiesAdapter extends RecyclerView.Adapter<AvailabilitiesAd
         TextView avCardHour = holder.avCardHour;
         TextView avCardtournament = holder.avCardtournament;
         CheckBox avBeschikbaar = holder.avBeschikbaar;
+        CardView cardView = holder.cardView;
         final int pos = holder.getAdapterPosition();
         avCardHour.setText(tournaments.get(position).getUur());
-        avCardtournament.setText(tournaments.get(position).getNaamkort());
+
 
         for(Availability av : MainActivity.app.getAvailabilities()){
             if(tournaments.get(position).getId() == av.getTournament().getId()){
@@ -49,6 +54,17 @@ public class AvailabilitiesAdapter extends RecyclerView.Adapter<AvailabilitiesAd
                 avBeschikbaar.setChecked(av.isChecked());
             }
         }
+
+        String tournamentName = tournaments.get(position).getNaamkort();
+        if(tournamentName.contains("PS:")){
+            cardView.setCardBackgroundColor(ContextCompat.getColor(c,R.color.colorPS));
+            tournamentName = tournamentName.replace("PS:", "" );
+        }else if(tournamentName.contains("Fun:")){
+            cardView.setCardBackgroundColor(ContextCompat.getColor(c,R.color.colorFun));
+            tournamentName = tournamentName.replace("Fun:", "" );
+        }
+
+        avCardtournament.setText(tournamentName);
 
         avBeschikbaar.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -88,6 +104,9 @@ public class AvailabilitiesAdapter extends RecyclerView.Adapter<AvailabilitiesAd
 
         @BindView(R.id.avBeschikbaar)
         public CheckBox avBeschikbaar;
+
+        @BindView(R.id.card_viewCH)
+        public CardView cardView;
 
         public AvailabilitiesViewHolder(View itemView) {
             super(itemView);

@@ -50,7 +50,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             @Override
             public void onClick(View view) {
                 if(users.get(position).getUsername().equals("Cancelled")){
-                    Toast.makeText(context,"sorry this number has been Cancelled!",Toast.LENGTH_SHORT).show(); //hihi
+                    Toast.makeText(context,"Its Easy???!",Toast.LENGTH_SHORT).show(); //hihi
                 }else {
                     Intent intent = new Intent(Intent.ACTION_DIAL);
                     intent.setData(Uri.parse("tel:" + users.get(position).getGsm()));

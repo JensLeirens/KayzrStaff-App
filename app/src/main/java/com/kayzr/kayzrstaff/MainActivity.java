@@ -23,7 +23,9 @@ import com.kayzr.kayzrstaff.domain.DaoSession;
 import com.kayzr.kayzrstaff.domain.EndWeek;
 import com.kayzr.kayzrstaff.domain.KayzrApp;
 import com.kayzr.kayzrstaff.domain.Tournament;
+import com.kayzr.kayzrstaff.domain.User;
 import com.kayzr.kayzrstaff.domain.UserDao;
+import com.kayzr.kayzrstaff.fragments.AboutFragment;
 import com.kayzr.kayzrstaff.fragments.AvailibilitiesFragment;
 import com.kayzr.kayzrstaff.fragments.HomeFragment;
 import com.kayzr.kayzrstaff.fragments.RosterFragment;
@@ -83,7 +85,7 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onFailure(Call<List<Tournament>> call, Throwable t) {
-                Log.e("Backend CAll", "call failed (ThisWeekTournaments) " + t.getMessage());
+                Log.e("Backend Call", "call failed (ThisWeekTournaments) " + t.getMessage());
             }
         });
 
@@ -103,7 +105,7 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onFailure(Call<List<Tournament>> call, Throwable t) {
-                Log.e("Backend CAll", "call failed (NextWeekTournaments) " + t.getMessage());
+                Log.e("Backend Call", "call failed (NextWeekTournaments) " + t.getMessage());
             }
         });
 
@@ -122,7 +124,7 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onFailure(Call<List<Availability>> call, Throwable t) {
-                Log.e("Backend CAll", "call failed (Availabilities) " + t.getMessage());
+                Log.e("Backend Call", "call failed (Availabilities) " + t.getMessage());
             }
         });
 
@@ -145,7 +147,7 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onFailure(Call<List<EndWeek>> call, Throwable t) {
-                Log.e("Backend CAll", "call failed (getEndweek) " + t.getMessage());
+                Log.e("Backend Call", "call failed (getEndweek) " + t.getMessage());
             }
         });
     }
@@ -219,6 +221,10 @@ public class MainActivity extends AppCompatActivity
             fragment = new TeamInfoFragment();
             toolbar.setTitle("Team Info");
             navigationView.getMenu().getItem(3).setChecked(true);
+        } else if (itemId == R.id.nav_about) {
+            fragment = new AboutFragment();
+            toolbar.setTitle("About");
+            navigationView.getMenu().getItem(4).setChecked(true);
         }
 
         // Replace the fragment.
@@ -307,10 +313,17 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected String doInBackground(String... params) {
             // deze methode haalt de user uit de database
+
             DaoSession daosesion = app.getDaoSession();
             UserDao userDao = daosesion.getUserDao();
-            app.setCurrentUser(userDao.loadAll().get(0));
-            app.getCurrentUser().setLoggedOn(false);
+            if (!userDao.loadAll().isEmpty()){
+                app.setCurrentUser(userDao.loadAll().get(0));
+                app.getCurrentUser().setLoggedOn(false);
+            } else {
+                app.setCurrentUser(new User());
+                app.getCurrentUser().setLoggedOn(false);
+            }
+
 
             //als de user uit de DB is gaan we de controle starten voor de user in te loggen
             checkNoUser();

@@ -61,7 +61,6 @@ public class User {
         this.rememberUsernameAndPass = rememberUsernameAndPass;
     }
 
-
     public boolean isLoggedOn() {
         return loggedOn;
     }

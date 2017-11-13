@@ -24,8 +24,11 @@ import com.kayzr.kayzrstaff.domain.Tournament;
 import com.kayzr.kayzrstaff.network.Calls;
 import com.kayzr.kayzrstaff.network.Config;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,12 +46,13 @@ public class AvailibilitiesFragment extends Fragment {
     @BindView(R.id.clearAvailabilities) Button clearAvailabilities;
     @BindView(R.id.avRecycler) RecyclerView mRecycler;
     @BindView(R.id.avNextWeekInfoText)TextView infoTextNextWeek;
+    @BindView(R.id.avDate) TextView avDate;
 
-
-    private int tabIndex;
+    private int tabIndex = 0 ;
     private int amountOfAvailabiltiesSend = 0 ;
     private int totalAmountOfAVSend = 0 ;
     private List<Tournament> tournamentsOfThatDay = new ArrayList<>();
+    private List<String> days = new ArrayList<>();
 
     @Nullable
     @Override
@@ -56,20 +60,20 @@ public class AvailibilitiesFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_availabilities, container, false);
         ButterKnife.bind(this, v);
         sendAvailabilities.setEnabled(false);
-        checkWeek();
+        calculateWeekDates();
         //lijst van tournamenten voor die dag maken
         setCurrentDayAsDefault();
         //End Week 0 = Niet einde van de week. Dus availabilities zijn nog open.
         //End Week 1 = Einde van de Week. Roster Next Week is gemaakt en mensen kunnen geen availabilities meer invullen
-
+        checkWeek();
 
 
         mTablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 tabIndex = tab.getPosition(); // 0 = monday, 1 = dinsdag, 2 = woendag ...
-
                 checkWeek();
+                avDate.setText(days.get(tabIndex));
             }
 
             @Override
@@ -153,7 +157,7 @@ public class AvailibilitiesFragment extends Fragment {
 
     private void initializeAvAdapter(){
 
-        AvailabilitiesAdapter adapter = new AvailabilitiesAdapter(tournamentsOfThatDay);
+        AvailabilitiesAdapter adapter = new AvailabilitiesAdapter(tournamentsOfThatDay, getContext());
         mRecycler.setAdapter(adapter);
     }
 
@@ -178,10 +182,16 @@ public class AvailibilitiesFragment extends Fragment {
 
         totalAmountOfAVSend = MainActivity.app.getAvailabilities().size();
 
-        for (Availability av : MainActivity.app.getAvailabilities()){
-            sendCallAvailabilities(av);
-        }
+        if(totalAmountOfAVSend > 0 ) {
+            for (Availability av : MainActivity.app.getAvailabilities()) {
+                sendCallAvailabilities(av);
+            }
 
+            sendAvailabilities.setEnabled(false);
+            clearAvailabilities.setEnabled(true);
+        } else {
+            Toast.makeText(getContext(),"No availabilities send! ",Toast.LENGTH_LONG).show();
+        }
 
     }
 
@@ -204,8 +214,11 @@ public class AvailibilitiesFragment extends Fragment {
             }
         });
 
-        Toast.makeText(getContext(),"Succesfully cleared availabilities, you are able to send now",Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(),"Succesfully cleared availabilities, you can now fill in your availabilties",Toast.LENGTH_LONG).show();
+        MainActivity.app.getAvailabilities().clear();
+        initializeAvAdapter();
         sendAvailabilities.setEnabled(true);
+        clearAvailabilities.setEnabled(false);
     }
 
     public void sendCallAvailabilities(final Availability av){
@@ -234,6 +247,22 @@ public class AvailibilitiesFragment extends Fragment {
         });
     }
 
+    private void calculateWeekDates(){
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd.MM.yyyy", Locale.US);
+
+        for (int i = 0; i < 7; i++) {
+            cal.add(Calendar.DAY_OF_WEEK, 1);
+        }
+
+        for (int i = 0; i < 7; i++) {
+            days.add(sdf.format(cal.getTime()));
+            cal.add(Calendar.DAY_OF_WEEK, 1);
+        }
+
+        avDate.setText(days.get(tabIndex));
+    }
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

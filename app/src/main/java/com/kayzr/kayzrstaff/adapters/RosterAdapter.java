@@ -2,6 +2,7 @@ package com.kayzr.kayzrstaff.adapters;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +43,7 @@ public class RosterAdapter extends RecyclerView.Adapter<RosterAdapter.RosterView
         TextView rosterCardHour = holder.rosterCardHour;
         TextView rosterCardMod = holder.rosterCardMod;
         TextView rosterCardName = holder.rosterCardName;
+        CardView cardView = holder.cardView;
         String mod;
 
         if(tournaments.get(position).getModerator().contains(";")){
@@ -50,6 +52,7 @@ public class RosterAdapter extends RecyclerView.Adapter<RosterAdapter.RosterView
         {
             mod = tournaments.get(position).getModerator() ;
         }
+
         for(User u : MainActivity.app.getKayzrTeam()){
             if(tournaments.get(position).getModerator().equals(u.getUsername())){
                 if(u.getRole() == Role.Mod){
@@ -60,9 +63,23 @@ public class RosterAdapter extends RecyclerView.Adapter<RosterAdapter.RosterView
             }
         }
 
+        if(tournaments.get(position).getModerator().equals("Cancelled")){
+            rosterCardMod.setTextColor(ContextCompat.getColor(c,R.color.colorCancelled));
+        }
+
+        String tournamentName = tournaments.get(position).getNaamkort();
+        if(tournamentName.contains("PS:")){
+            cardView.setCardBackgroundColor(ContextCompat.getColor(c,R.color.colorPS));
+            tournamentName = tournamentName.replace("PS:", "" );
+        }else if(tournamentName.contains("Fun:")){
+            cardView.setCardBackgroundColor(ContextCompat.getColor(c,R.color.colorFun));
+            tournamentName = tournamentName.replace("Fun:", "" );
+        }
+
+
         rosterCardMod.setText(mod);
         rosterCardHour.setText(tournaments.get(position).getUur());
-        rosterCardName.setText(tournaments.get(position).getNaamkort());
+        rosterCardName.setText(tournamentName);
     }
 
     @Override
@@ -81,6 +98,8 @@ public class RosterAdapter extends RecyclerView.Adapter<RosterAdapter.RosterView
         @BindView(R.id.rosterCardName)
         public TextView rosterCardName;
 
+        @BindView(R.id.card_viewCH)
+        public CardView cardView;
 
         public RosterViewHolder(View itemView) {
             super(itemView);

@@ -9,5 +9,9 @@
     <color name="colorAdmin">#8508e4</color>
     <color name="colorCM">#15bdff</color>
     <color name="colorMOD">#ff5b1c</color>
+    <color name="colorCancelled">#ff0400</color>
     <color name="colorCheckboxSelected">#ffb74d</color>
+    <color name="colorPS">#0f51c1</color>
+    <color name="colorFun">#036600</color>
+
 </resources>

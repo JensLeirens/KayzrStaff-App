@@ -9,6 +9,18 @@
     android:orientation="vertical"
     android:weightSum="1">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/avDate"
+        android:padding="5dp"
+        android:layout_gravity="center"
+        android:text="Monday 13.11.2017"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/colorText"
+        />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -30,7 +42,7 @@
         android:text="This is the roster for next week!"
         android:textColor="@color/colorText"
         android:textStyle="bold"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:id="@+id/avNextWeekInfoText"
         />
 <RelativeLayout

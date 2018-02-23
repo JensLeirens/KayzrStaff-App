@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kayzr.kayzrstaff.MainActivity;
@@ -40,9 +41,9 @@ public class RosterAdapter extends RecyclerView.Adapter<RosterAdapter.RosterView
 
     @Override
     public void onBindViewHolder(RosterViewHolder holder, int position) {
-        TextView rosterCardHour = holder.rosterCardHour;
-        TextView rosterCardMod = holder.rosterCardMod;
-        TextView rosterCardName = holder.rosterCardName;
+        TextView tournyStartHour = holder.tournyStartHour;
+        TextView tournyMod = holder.tournyMod;
+        TextView tournyName = holder.tournyName;
         CardView cardView = holder.cardView;
         String mod;
 
@@ -56,15 +57,15 @@ public class RosterAdapter extends RecyclerView.Adapter<RosterAdapter.RosterView
         for(User u : MainActivity.app.getKayzrTeam()){
             if(tournaments.get(position).getModerator().equals(u.getUsername())){
                 if(u.getRole() == Role.Mod){
-                    rosterCardMod.setTextColor(ContextCompat.getColor(c,R.color.colorMOD));
+                    tournyMod.setTextColor(ContextCompat.getColor(c,R.color.colorMOD));
                 } else {
-                    rosterCardMod.setTextColor(ContextCompat.getColor(c, R.color.colorCM));
+                    tournyMod.setTextColor(ContextCompat.getColor(c, R.color.colorCM));
                 }
             }
         }
 
-        if(tournaments.get(position).getModerator().equals("Cancelled")){
-            rosterCardMod.setTextColor(ContextCompat.getColor(c,R.color.colorCancelled));
+        if(mod.equals("Cancelled")){
+            tournyMod.setTextColor(ContextCompat.getColor(c,R.color.colorCancelled));
         }
 
         String tournamentName = tournaments.get(position).getNaamkort();
@@ -77,9 +78,9 @@ public class RosterAdapter extends RecyclerView.Adapter<RosterAdapter.RosterView
         }
 
 
-        rosterCardMod.setText(mod);
-        rosterCardHour.setText(tournaments.get(position).getUur());
-        rosterCardName.setText(tournamentName);
+        tournyMod.setText(mod);
+        tournyStartHour.setText(tournaments.get(position).getUur());
+        tournyName.setText(tournamentName);
     }
 
     @Override
@@ -89,14 +90,20 @@ public class RosterAdapter extends RecyclerView.Adapter<RosterAdapter.RosterView
 
     public static class RosterViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.rosterCardHour)
-        public TextView rosterCardHour;
+        @BindView(R.id.cardTournyStartHour)
+        public TextView tournyStartHour;
 
-        @BindView(R.id.rosterCardMod)
-        public TextView rosterCardMod;
+        @BindView(R.id.cardTournyMod)
+        public TextView tournyMod;
 
-        @BindView(R.id.rosterCardName)
-        public TextView rosterCardName;
+        @BindView(R.id.cardTournyDate)
+        public TextView tournyDate;
+
+        @BindView(R.id.cardTournyName)
+        public TextView tournyName;
+
+        @BindView(R.id.cardTournyImage)
+        public ImageView tournyImage;
 
         @BindView(R.id.card_viewCH)
         public CardView cardView;

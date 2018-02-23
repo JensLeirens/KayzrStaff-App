@@ -1,24 +1,7 @@
 package com.kayzr.kayzrstaff.adapters;
 
-import android.content.Context;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-
-import com.kayzr.kayzrstaff.R;
-import com.kayzr.kayzrstaff.domain.Tournament;
-
-import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
-public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder> {
-
+public class HomeAdapter {
+/*
     private int itemCount;
     private List<Tournament> tournaments;
     private Context c ;
@@ -83,4 +66,4 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
             ButterKnife.bind(this, itemView);
         }
     }
-}
+*/}

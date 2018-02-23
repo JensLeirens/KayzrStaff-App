@@ -9,12 +9,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.kayzr.kayzrstaff.MainActivity;
 import com.kayzr.kayzrstaff.R;
 import com.kayzr.kayzrstaff.adapters.RosterAdapter;
+import com.kayzr.kayzrstaff.domain.KayzrApp;
 import com.kayzr.kayzrstaff.domain.Tournament;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -35,6 +39,8 @@ public class RosterFragment extends Fragment {
         ButterKnife.bind(this, v);
 
         initdata();
+
+        KayzrApp app = (KayzrApp) getActivity().getApplicationContext();
 
         setCurrentDayAsDefault();
 

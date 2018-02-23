@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 
 import com.kayzr.kayzrstaff.MainActivity;
 import com.kayzr.kayzrstaff.R;
-import com.kayzr.kayzrstaff.adapters.HomeAdapter;
 import com.kayzr.kayzrstaff.domain.Tournament;
 import com.kayzr.kayzrstaff.domain.User;
 import com.kayzr.kayzrstaff.network.Calls;
@@ -55,8 +54,9 @@ public class HomeFragment extends Fragment {
 
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecycler.setLayoutManager(mLayoutManager);
-        HomeAdapter adapter = new HomeAdapter(tournaments, getContext());
-        mRecycler.setAdapter(adapter);
+        //TODO
+        //HomeAdapter adapter = new HomeAdapter(tournaments, getContext());
+        //mRecycler.setAdapter(adapter);
 
     }
 

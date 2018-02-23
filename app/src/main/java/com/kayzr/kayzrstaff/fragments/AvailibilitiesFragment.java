@@ -116,6 +116,8 @@ public class AvailibilitiesFragment extends Fragment {
     private void calculateData(){
         List<Availability> avs = new ArrayList<>();
         //Selecting the av for the current user
+        // app crash when availabilities is 0
+        if (MainActivity.app.getAvailabilities() != null) {
         for(Availability av : MainActivity.app.getAvailabilities()){
             if(av.getUser().equals(MainActivity.app.getCurrentUser().getUsername())){
                 avs.add(av);
@@ -132,6 +134,10 @@ public class AvailibilitiesFragment extends Fragment {
                 }
             }
         }
+        } else {
+            MainActivity.app.setAvailabilities(new ArrayList<Availability>());
+        }
+
     }
 
     private void calculateNextWeekData(){

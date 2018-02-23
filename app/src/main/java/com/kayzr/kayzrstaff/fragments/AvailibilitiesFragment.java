@@ -60,13 +60,11 @@ public class AvailibilitiesFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_availabilities, container, false);
         ButterKnife.bind(this, v);
         sendAvailabilities.setEnabled(false);
-        calculateWeekDates();
-        //lijst van tournamenten voor die dag maken
         setCurrentDayAsDefault();
+        calculateWeekDates();
         //End Week 0 = Niet einde van de week. Dus availabilities zijn nog open.
         //End Week 1 = Einde van de Week. Roster Next Week is gemaakt en mensen kunnen geen availabilities meer invullen
         checkWeek();
-
 
         mTablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -157,7 +155,7 @@ public class AvailibilitiesFragment extends Fragment {
 
     private void initializeNextWeekAdapter(){
 
-        RosterAdapter adapter = new RosterAdapter(tournamentsOfThatDay,getContext());
+        RosterAdapter adapter = new RosterAdapter(tournamentsOfThatDay,true,getContext());
         mRecycler.setAdapter(adapter);
     }
 
@@ -178,9 +176,9 @@ public class AvailibilitiesFragment extends Fragment {
     }
 
     public void setCurrentDayAsDefault(){
-        int tab = MainActivity.app.currentDayOfWeek();
-        initializeAdapterData(MainActivity.app.dayOfWeek(tab));
-        mTablayout.getTabAt(tab).select();
+        tabIndex = MainActivity.app.currentDayOfWeek();
+        initializeAdapterData(MainActivity.app.dayOfWeek(tabIndex));
+        mTablayout.getTabAt(tabIndex).select();
     }
 
     @OnClick(R.id.sendAvailabilities)

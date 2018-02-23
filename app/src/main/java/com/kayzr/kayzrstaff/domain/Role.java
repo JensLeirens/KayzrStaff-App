@@ -7,7 +7,7 @@ package com.kayzr.kayzrstaff.domain;
 public enum Role {
     CM(0),
     Mod(1),
-    ModR(2);
+    Admin(2);
 
     private final int value;
 

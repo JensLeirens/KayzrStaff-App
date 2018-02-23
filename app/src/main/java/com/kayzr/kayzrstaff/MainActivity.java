@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.nav_view)
     NavigationView navigationView;
 
+    private static int currentPage = 0;
     public static KayzrApp app;
 
     @Override
@@ -209,22 +210,27 @@ public class MainActivity extends AppCompatActivity
             fragment = new HomeFragment();
             toolbar.setTitle("KayzrStaff");
             navigationView.getMenu().getItem(0).setChecked(true);
+            currentPage = 0 ;
         } else if (itemId == R.id.nav_this_week) {
             fragment = new RosterFragment();
             toolbar.setTitle("This week");
             navigationView.getMenu().getItem(1).setChecked(true);
+            currentPage = 1 ;
         } else if (itemId == R.id.nav_availabilities) {
             fragment = new AvailibilitiesFragment();
             toolbar.setTitle("Availibilities");
             navigationView.getMenu().getItem(2).setChecked(true);
+            currentPage = 2 ;
         } else if (itemId == R.id.nav_team_info) {
             fragment = new TeamInfoFragment();
             toolbar.setTitle("Team Info");
             navigationView.getMenu().getItem(3).setChecked(true);
+            currentPage = 3 ;
         } else if (itemId == R.id.nav_about) {
             fragment = new AboutFragment();
             toolbar.setTitle("About");
             navigationView.getMenu().getItem(4).setChecked(true);
+            currentPage = 4 ;
         }
 
         // Replace the fragment.
@@ -266,8 +272,8 @@ public class MainActivity extends AppCompatActivity
             TextView username = (TextView) navView.findViewById(R.id.userName);
             username.setText(MainActivity.app.getCurrentUser().getUsername());
 
-            //ga naar het homescherm
-            displaySelectedScreen(R.id.nav_home);
+            //ga naar zijn laatste scherm
+            displaySelectedScreen(currentPage);
         } else {
             //if no user logged in then close the app
             if (!LoginActivity.leave) {

@@ -1,24 +1,30 @@
 package com.kayzr.kayzrstaff.domain;
 
-/**
- * Created by Mafken on 9/10/2017.
- */
-
 public class JsonResponse {
-    private String error;
-
-    public JsonResponse(String error) {
-        this.error = error;
-    }
+    private boolean error;
+    private String message;
 
     public JsonResponse() {
     }
 
-    public String getError() {
+    public JsonResponse(boolean error, String message) {
+        this.error = error;
+        this.message = message;
+    }
+
+    public boolean isError() {
         return error;
     }
 
-    public void setError(String error) {
+    public void setError(boolean error) {
         this.error = error;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

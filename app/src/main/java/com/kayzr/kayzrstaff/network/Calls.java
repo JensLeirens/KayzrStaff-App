@@ -10,10 +10,10 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface Calls {
+//this RESTish API doc can be found on https://gist.github.com/ThePjpollie/c72a80f70b9186dc737d447b76273b3c
 
     @GET("thisweek/")
     Call<List<Tournament>> getThisWeekTournaments();
@@ -21,23 +21,22 @@ public interface Calls {
     @GET("availabilities/")
     Call<List<Availability>> getAvailabilities();
 
-
     @GET("NextWeek/")
     Call<List<Tournament>> getNextWeekTournaments();
 
     @GET("users/")
-    Call<List<User>> getUser(@Query("user") String username);
+    Call<User> getUser(@Query("user") String username);
 
-    @POST("SendAV/")
-    Call<List<JsonResponse>> sendAV(@Query("Mod") String username, @Query("Id") String TournamentId, @Query("Key") String Key);
+    @GET("SendAV/")
+    Call<JsonResponse> sendAV(@Query("key") String Key,@Query("user") String username, @Query("id") String TournamentId );
 
-    @POST("ClearAV/")
-    Call<List<JsonResponse>> clearAV(@Query("Mod") String User, @Query("Key") String Key);
+    @GET("ClearAV/")
+    Call<JsonResponse> clearAV(@Query("key") String Key, @Query("user") String User);
 
     @GET("users/")
     Call<List<User>> getUsers();
 
      @GET("EndWeek/")
-    Call<List<EndWeek>> getEndweek();
+    Call<EndWeek> getEndweek();
 
 }

@@ -5,17 +5,17 @@ package com.kayzr.kayzrstaff.domain;
  */
 
 public class EndWeek {
-    private int endWeek;
+    private boolean endWeek;
 
-    public EndWeek(int endWeek) {
+    public EndWeek(boolean endWeek) {
         this.endWeek = endWeek;
     }
 
-    public int getEndWeek() {
+    public boolean getEndWeek() {
         return endWeek;
     }
 
-    public void setEndWeek(int endWeek) {
+    public void setEndWeek(boolean endWeek) {
         this.endWeek = endWeek;
     }
 }

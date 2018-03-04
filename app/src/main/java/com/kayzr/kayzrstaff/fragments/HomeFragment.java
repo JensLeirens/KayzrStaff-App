@@ -12,8 +12,8 @@ import android.view.ViewGroup;
 
 import com.kayzr.kayzrstaff.MainActivity;
 import com.kayzr.kayzrstaff.R;
+import com.kayzr.kayzrstaff.adapters.RosterAdapter;
 import com.kayzr.kayzrstaff.domain.Tournament;
-import com.kayzr.kayzrstaff.domain.User;
 import com.kayzr.kayzrstaff.network.Calls;
 import com.kayzr.kayzrstaff.network.Config;
 
@@ -38,11 +38,13 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, v);
+        processData();
+        getThisWeekTournaments();
 
         return v;
     }
 
-    private void initdata(){
+    private void processData(){
 
         if(MainActivity.app.getCurrentUser() != null){
             for(Tournament t : MainActivity.app.getThisWeek()){
@@ -54,35 +56,36 @@ public class HomeFragment extends Fragment {
 
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecycler.setLayoutManager(mLayoutManager);
-        //TODO
-        //HomeAdapter adapter = new HomeAdapter(tournaments, getContext());
-        //mRecycler.setAdapter(adapter);
+
+        RosterAdapter adapter = new RosterAdapter(tournaments,false, getContext());
+        mRecycler.setAdapter(adapter);
 
     }
 
-    public void getUsersList() {
+    public void getThisWeekTournaments() {
 
         Calls caller = Config.getRetrofit().create(Calls.class);
-        Call<List<User>> call = caller.getUsers();
-        call.enqueue(new Callback<List<User>>() {
+        Call<List<Tournament>> call = caller.getThisWeekTournaments();
+        call.enqueue(new Callback<List<Tournament>>() {
             @Override
-            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                MainActivity.app.setKayzrTeam(response.body());
-                Log.d("Backend Call", " call successful (getTeam)");
-                initdata();
+            public void onResponse(Call<List<Tournament>> call, Response<List<Tournament>> response) {
+                MainActivity.app.setThisWeek(response.body());
+                processData();
+                Log.d("Backend Call", " call successful (ThisWeekTournaments)");
+
             }
 
-
             @Override
-            public void onFailure(Call<List<User>> call, Throwable t) {
-                Log.e("Backend CAll", "call failed (getTeam) " + t.getMessage());
+            public void onFailure(Call<List<Tournament>> call, Throwable t) {
+                Log.e("Backend Call", "call failed (ThisWeekTournaments) " + t.getMessage());
             }
         });
+
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getUsersList();
+
     }
 }

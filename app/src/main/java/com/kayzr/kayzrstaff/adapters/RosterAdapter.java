@@ -2,7 +2,6 @@ package com.kayzr.kayzrstaff.adapters;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +14,7 @@ import com.kayzr.kayzrstaff.R;
 import com.kayzr.kayzrstaff.domain.Role;
 import com.kayzr.kayzrstaff.domain.Tournament;
 import com.kayzr.kayzrstaff.domain.User;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -26,11 +26,13 @@ public class RosterAdapter extends RecyclerView.Adapter<RosterAdapter.RosterView
     private int itemCount;
     private Context c ;
     private List<Tournament> tournaments;
+    private Boolean moderator;
 
-    public RosterAdapter(List<Tournament> tournaments, Context c) {
+    public RosterAdapter(List<Tournament> tournaments,Boolean moderator, Context c) {
         this.tournaments = tournaments;
         this.itemCount = tournaments.size();
         this.c = c ;
+        this.moderator = moderator;
     }
 
     @Override
@@ -44,9 +46,14 @@ public class RosterAdapter extends RecyclerView.Adapter<RosterAdapter.RosterView
         TextView tournyStartHour = holder.tournyStartHour;
         TextView tournyMod = holder.tournyMod;
         TextView tournyName = holder.tournyName;
-        CardView cardView = holder.cardView;
-        String mod;
+        TextView tournyDate = holder.tournyDate;
+        ImageView tournyImage = holder.tournyImage;
+        //CardView cardView = holder.cardView;
+        String tournamentName = tournaments.get(position).getNaam();
+        String tournamentNameKort = tournaments.get(position).getNaamkort();
 
+        // checking for multiple moderators
+        String mod;
         if(tournaments.get(position).getModerator().contains(";")){
             mod = tournaments.get(position).getModerator().replace(";"," & ");
         } else
@@ -54,33 +61,78 @@ public class RosterAdapter extends RecyclerView.Adapter<RosterAdapter.RosterView
             mod = tournaments.get(position).getModerator() ;
         }
 
+        //adding the color for the moderator
+
         for(User u : MainActivity.app.getKayzrTeam()){
-            if(tournaments.get(position).getModerator().equals(u.getUsername())){
-                if(u.getRole() == Role.Mod){
-                    tournyMod.setTextColor(ContextCompat.getColor(c,R.color.colorMOD));
-                } else {
+            if(u.getUsername().equals("Mafken")){
+                u.setRole(Role.CM);
+            }
+            if(tournaments.get(position).getModerator().contains(u.getUsername())){
+                if(u.getRole() == Role.CM){
                     tournyMod.setTextColor(ContextCompat.getColor(c, R.color.colorCM));
+                    break; // to end the for so it does not get overwritten
+                } else if(u.getRole() == Role.Mod){
+                    tournyMod.setTextColor(ContextCompat.getColor(c,R.color.colorMOD));
+                } else if(u.getRole() == Role.Admin){
+                    tournyMod.setTextColor(ContextCompat.getColor(c, R.color.colorAdmin));
                 }
             }
         }
 
+        //checking for cancelled tourny
         if(mod.equals("Cancelled")){
             tournyMod.setTextColor(ContextCompat.getColor(c,R.color.colorCancelled));
         }
 
-        String tournamentName = tournaments.get(position).getNaamkort();
+        if(mod.equals("")){
+            tournyMod.setTextColor(ContextCompat.getColor(c,R.color.colorCancelled));
+            mod = "No Moderator assigned";
+        }
+        //adding the fun or PS colors
+
         if(tournamentName.contains("PS:")){
-            cardView.setCardBackgroundColor(ContextCompat.getColor(c,R.color.colorPS));
-            tournamentName = tournamentName.replace("PS:", "" );
+            //cardView.setCardBackgroundColor(ContextCompat.getColor(c,R.color.colorPS));
+            tournamentName = tournamentName.replace("PS: ", "" );
         }else if(tournamentName.contains("Fun:")){
-            cardView.setCardBackgroundColor(ContextCompat.getColor(c,R.color.colorFun));
-            tournamentName = tournamentName.replace("Fun:", "" );
+            //cardView.setCardBackgroundColor(ContextCompat.getColor(c,R.color.colorFun));
+            tournamentName = tournamentName.replace("Fun: ", "" );
         }
 
+        //adding the correct image
+        if (tournamentNameKort.contains("CS:GO")) {
+            Picasso.with(c).load(R.drawable.csgo).into(tournyImage);
 
-        tournyMod.setText(mod);
-        tournyStartHour.setText(tournaments.get(position).getUur());
+        } else if (tournamentNameKort.contains("HS")) {
+            Picasso.with(c).load(R.drawable.hs).into(tournyImage);
+
+        } else if (tournamentNameKort.contains("LoL")) {
+            Picasso.with(c).load(R.drawable.lol).into(tournyImage);
+
+        } else if (tournamentNameKort.contains("RL")) {
+            Picasso.with(c).load(R.drawable.rl).into(tournyImage);
+
+        } else if (tournamentNameKort.contains("COD")) {
+            Picasso.with(c).load(R.drawable.cod).into(tournyImage);
+
+        } else if (tournamentNameKort.contains("BR")) {
+            Picasso.with(c).load(R.drawable.battlerite).into(tournyImage);
+
+        } else if (tournamentNameKort.contains("FIFA")) {
+            Picasso.with(c).load(R.drawable.fifa).into(tournyImage);
+
+        } else if (tournamentNameKort.contains("Dota")) {
+            Picasso.with(c).load(R.drawable.dota).into(tournyImage);
+
+        } else {
+            Picasso.with(c).load(R.drawable.icon).into(tournyImage);
+        }
+
+        tournyMod.setText(moderator ? mod : "" );
         tournyName.setText(tournamentName);
+        //using the formatted string in the String values
+        tournyStartHour.setText(c.getString(R.string.tournamentHour, tournaments.get(position).getUur()));
+        tournyDate.setText(c.getString(R.string.tournamentDate,
+                tournaments.get(position).getDag(),tournaments.get(position).getDatum()));
     }
 
     @Override
@@ -105,8 +157,8 @@ public class RosterAdapter extends RecyclerView.Adapter<RosterAdapter.RosterView
         @BindView(R.id.cardTournyImage)
         public ImageView tournyImage;
 
-        @BindView(R.id.card_viewCH)
-        public CardView cardView;
+        //@BindView(R.id.card_viewCH)
+        //public CardView cardView;
 
         public RosterViewHolder(View itemView) {
             super(itemView);

@@ -43,7 +43,6 @@ public class AvailibilitiesFragment extends Fragment {
     protected RecyclerView.LayoutManager mLayoutManager;
     @BindView(R.id.avTablayout) TabLayout mTablayout;
     @BindView(R.id.sendAvailabilities) Button sendAvailabilities;
-    @BindView(R.id.clearAvailabilities) Button clearAvailabilities;
     @BindView(R.id.avRecycler) RecyclerView mRecycler;
     @BindView(R.id.avNextWeekInfoText)TextView infoTextNextWeek;
     @BindView(R.id.avDate) TextView avDate;
@@ -59,14 +58,11 @@ public class AvailibilitiesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_availabilities, container, false);
         ButterKnife.bind(this, v);
-        sendAvailabilities.setEnabled(false);
-        calculateWeekDates();
-        //lijst van tournamenten voor die dag maken
         setCurrentDayAsDefault();
+        calculateWeekDates();
         //End Week 0 = Niet einde van de week. Dus availabilities zijn nog open.
         //End Week 1 = Einde van de Week. Roster Next Week is gemaakt en mensen kunnen geen availabilities meer invullen
         checkWeek();
-
 
         mTablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -101,15 +97,13 @@ public class AvailibilitiesFragment extends Fragment {
             initializeAvAdapter();
             infoTextNextWeek.setVisibility(View.GONE);
             sendAvailabilities.setVisibility(View.VISIBLE);
-            clearAvailabilities.setVisibility(View.VISIBLE);
+
         } else {
             //adapter koppelen van roster
             calculateNextWeekData();
             initializeNextWeekAdapter();
             infoTextNextWeek.setVisibility(View.VISIBLE);
             sendAvailabilities.setVisibility(View.GONE);
-            clearAvailabilities.setVisibility(View.GONE);
-
         }
     }
 
@@ -157,7 +151,7 @@ public class AvailibilitiesFragment extends Fragment {
 
     private void initializeNextWeekAdapter(){
 
-        RosterAdapter adapter = new RosterAdapter(tournamentsOfThatDay,getContext());
+        RosterAdapter adapter = new RosterAdapter(tournamentsOfThatDay,true,getContext());
         mRecycler.setAdapter(adapter);
     }
 
@@ -178,39 +172,27 @@ public class AvailibilitiesFragment extends Fragment {
     }
 
     public void setCurrentDayAsDefault(){
-        int tab = MainActivity.app.currentDayOfWeek();
-        initializeAdapterData(MainActivity.app.dayOfWeek(tab));
-        mTablayout.getTabAt(tab).select();
+        tabIndex = MainActivity.app.currentDayOfWeek();
+        initializeAdapterData(MainActivity.app.dayOfWeek(tabIndex));
+        mTablayout.getTabAt(tabIndex).select();
     }
 
     @OnClick(R.id.sendAvailabilities)
     public void sendAvailabilities(){
-
-        totalAmountOfAVSend = MainActivity.app.getAvailabilities().size();
-
-        if(totalAmountOfAVSend > 0 ) {
-            for (Availability av : MainActivity.app.getAvailabilities()) {
-                sendCallAvailabilities(av);
-            }
-
-            sendAvailabilities.setEnabled(false);
-            clearAvailabilities.setEnabled(true);
-        } else {
-            Toast.makeText(getContext(),"No availabilities send! ",Toast.LENGTH_LONG).show();
-        }
-
-    }
-
-    @OnClick(R.id.clearAvailabilities)
-    public void clearAvailabilities(){
         Calls caller = Config.getRetrofit().create(Calls.class);
         Call call = caller.clearAV(MainActivity.app.getCurrentUser().getUsername(),"8w03QQ2ByD6vxZEPSBjPJR89SeQhoR8C");
         call.enqueue(new Callback<List<JsonResponse>>() {
             @Override
             public void onResponse(Call<List<JsonResponse>> call, Response<List<JsonResponse>> response) {
-                List<JsonResponse> responses = response.body();
-                Log.d("Backend CAll", "call succes (clear Availabilities) ");
-                Log.d("Backend CAll", "call RESPONSE " + responses.get(0).getError());
+                totalAmountOfAVSend = MainActivity.app.getAvailabilities().size();
+
+                if(totalAmountOfAVSend > 0 ) {
+                    for (Availability av : MainActivity.app.getAvailabilities()) {
+                        sendCallAvailabilities(av);
+                    }
+                } else {
+                    Toast.makeText(getContext(),"No availabilities send! ",Toast.LENGTH_LONG).show();
+                }
 
             }
 
@@ -220,11 +202,6 @@ public class AvailibilitiesFragment extends Fragment {
             }
         });
 
-        Toast.makeText(getContext(),"Succesfully cleared availabilities, you can now fill in your availabilties",Toast.LENGTH_LONG).show();
-        MainActivity.app.getAvailabilities().clear();
-        initializeAvAdapter();
-        sendAvailabilities.setEnabled(true);
-        clearAvailabilities.setEnabled(false);
     }
 
     public void sendCallAvailabilities(final Availability av){

@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3b3f51</color>
-    <color name="colorPrimaryDark">#1c1c1f</color>
-    <color name="colorAccent">#444d54</color>
-    <color name="colorCardBackground">#28282c</color>
-    <color name="colorText">#5b99cc</color>
+    <color name="colorPrimary">#424242</color>
+    <color name="colorPrimaryDark">#212121</color>
+    <color name="colorAccent">#780502</color>
     <color name="colorbutton">#0a2ed1</color>
     <color name="colorAdmin">#8508e4</color>
     <color name="colorCM">#15bdff</color>
     <color name="colorMOD">#ff5b1c</color>
     <color name="colorCancelled">#ff0400</color>
-    <color name="colorCheckboxSelected">#ffb74d</color>
     <color name="colorPS">#0f51c1</color>
     <color name="colorFun">#036600</color>
-
+    <color name="colorText">#D6D6D6</color>
 </resources>

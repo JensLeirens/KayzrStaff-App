@@ -60,20 +60,10 @@ public class LoginActivity extends AppCompatActivity {
             Log.e("Sha encrypt error", e.toString());
         }
 
-        //if the user wanted to be remembered then we dont need to send the encypted password to the backend
         if(MainActivity.app.getCurrentUser().getRememberUsernameAndPass()){
-            // check if the user that wanted to be rememeberd is the same then the user that wants to login
-            if(mUsername.getText().toString().equals(MainActivity.app.getCurrentUser().getUsername())){
-                // if its the same then we can send our already encrypted saved password to the task
-                UserLoginTask task = new UserLoginTask(mUsername.getText().toString(), mPassword.getText().toString());
-                task.doInBackground();
-            } else {
-                // if its another user we need to send the new encrypted password and username to the task
-                UserLoginTask task = new UserLoginTask(mUsername.getText().toString(), encryptedPas);
-                task.doInBackground();
-            }
+            UserLoginTask task = new UserLoginTask(mUsername.getText().toString(), mPassword.getText().toString());
+            task.doInBackground();
         } else {
-            //if the user did not wanted to be rememeber the we have to send the username and the new encrypted password to the task
             UserLoginTask task = new UserLoginTask(mUsername.getText().toString(), encryptedPas);
             task.doInBackground();
         }
@@ -119,56 +109,42 @@ public class LoginActivity extends AppCompatActivity {
             // we make the call to get the userinfo and pas from the backend with the username
             Calls caller = Config.getRetrofit().create(Calls.class);
             Call<List<User>> call = caller.getUser(mUsername);
-            call.enqueue(new Callback<List<User>>  () {
+            call.enqueue(new Callback<List<User>>() {
                 @Override
-                public void onResponse(Call<List<User>>   call, Response<List<User>>   response) {
+                public void onResponse(Call<List<User>> call, Response<List<User>> response) {
 
-                        try {
-                            //Normaal verloop: de user uit backend halen
-                            currentUser = response.body().get(0);
-                            Log.d("Backend Call", " call successful (get user)");
+                    try {
+                        //Normaal verloop: de user uit backend halen
+                        currentUser = response.body().get(0);
+                        Log.d("Backend Call", " call successful (get user)");
 
-                            //kijken of het paswoord gelijk is
-                            if (mPassword.equals(currentUser.getPassword())) {
-                                // we kijken of er nog geen user was die al eens ingelogd had of uit de database gehaald is
-                                if(MainActivity.app.getCurrentUser() == null ){
-                                    // als dit niet zo is dan zetten we de nieuwe user als de current user van de app
-                                    currentUser.setLoggedOn(true);
-                                    MainActivity.app.setCurrentUser(currentUser);
-                                    MainActivity.app.getCurrentUser().setPassword(mPassword);
-                                    MainActivity.app.getCurrentUser().setLoggedOn(true);
-                                }else {
-                                    // als we al een user hadden die al eens had ingelogd moeten we controleren of dit dezelfde user is
-                                    if(currentUser.getUsername().equals(MainActivity.app.getCurrentUser().getUsername())){
-                                        // als dit zo is dan zetten we de user logged in
-                                        MainActivity.app.getCurrentUser().setLoggedOn(true);
-                                    } else{
-                                        // als de user verschillend is dan moeten we de nieuwe user veranderen met de current user
-                                        currentUser.setLoggedOn(true);
-                                        MainActivity.app.setCurrentUser(currentUser);
-                                        MainActivity.app.getCurrentUser().setPassword(mPassword);
-                                        MainActivity.app.getCurrentUser().setLoggedOn(true);
-                                    }
-                                }
-                                // de login activity is afgelopen en de user is ingelogd deze activity mag afgesloten worden
-                                finish();
+                        //kijken of het paswoord gelijk is
+                        if (mPassword.equals(currentUser.getPassword())) {
+                            currentUser.setLoggedOn(true);
+                            MainActivity.app.setCurrentUser(currentUser);
+                            MainActivity.app.getCurrentUser().setPassword(mPassword);
 
-                            } else {
-                                // user is niet ingelogd toon een popup
-                                Toast.makeText(getApplicationContext(), "Wrong password or username", Toast.LENGTH_LONG).show();
-                            }
-                        } catch (NullPointerException npe ){
-                            // mocht de backend niet werken of de username is verkeerd dan krijgt men een nullpointer
-                            // dit was dan de makkelijkste manier om deze op te vangen
-                            Toast.makeText(getApplicationContext(),"There is no user like that are the service is currently down! " +
-                                    "please report this to Mafken",Toast.LENGTH_LONG).show();
+                            // de login activity is afgelopen en de user is ingelogd deze activity mag afgesloten worden
+                            finish();
+
+                        } else {
+                            // user is niet ingelogd toon een popup
+                            Toast.makeText(getApplicationContext(), "Wrong password or username", Toast.LENGTH_LONG).show();
                         }
+                    } catch (NullPointerException npe) {
+                        // mocht de backend niet werken of de username is verkeerd dan krijgt men een nullpointer
+                        // dit was dan de makkelijkste manier om deze op te vangen
+                        Toast.makeText(getApplicationContext(), "There is no user like that or the service is currently down! " +
+                                "please report this to Mafken", Toast.LENGTH_LONG).show();
+                    }
                 }
 
                 @Override
-                public void onFailure(Call<List<User>>   call, Throwable t) {
+                public void onFailure(Call<List<User>> call, Throwable t) {
                     //als er een error is in de call
                     Log.e("Backend CAll", "call failed (get user) " + t.getMessage());
+                    Toast.makeText(getApplicationContext(), "The service is currently down! " +
+                            "please report this to Mafken", Toast.LENGTH_LONG).show();
                 }
             });
 

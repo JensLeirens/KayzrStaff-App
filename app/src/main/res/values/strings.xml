@@ -9,6 +9,9 @@
 
     <string name="modDayTourneyTime">Tourney at: </string>
 
+    <!-- Strings related to Tournament Cards -->
+    <string name="tournamentHour">Begint om %s</string>
+    <string name="tournamentDate">%s %s</string>
 
     <!-- Strings related to About -->
     <string name="aboutWho">The Kayzr staff application is made by <font fgcolor="#ff5b1c"><b>Mafken</b></font>

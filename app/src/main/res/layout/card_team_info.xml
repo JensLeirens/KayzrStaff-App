@@ -1,67 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
-    android:orientation="vertical">
+    android:padding="5dp">
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/card_viewCH"
+    <LinearLayout
+        android:layout_alignParentStart="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="0.25dp"
-        android:paddingTop="10dp"
-        card_view:cardBackgroundColor="@color/colorCardBackground"
-        card_view:cardCornerRadius="5dp"
-        card_view:cardElevation="2dp"
-        card_view:contentPaddingBottom="5dp"
-        card_view:contentPaddingLeft="10dp"
-        card_view:contentPaddingRight="15dp"
-        card_view:contentPaddingTop="5dp">
+        android:orientation="vertical">
 
-        <RelativeLayout
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/TIUsername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ADC wildsquirtle"
+                android:padding="5dp"
+                android:textSize="18dp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-"
+                android:textColor="@color/colorText" />
+
+            <TextView
+                android:padding="5dp"
+                android:id="@+id/TINumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0471626404"
+                android:textColor="@color/colorText" />
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/TIFullName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="horizontal"
-            android:padding="5dp">
+            android:paddingStart="5dp"
+            android:text="Jens Leirens"
+            android:textColor="@color/colorText"
+            android:paddingBottom="5dp"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorText" />
+    </LinearLayout>
 
-            <TextView
-                android:id="@+id/TIusername"
-                android:layout_width="110dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:padding="8dp"
-                android:text="ADC wildsquirtle"
-                android:textColor="@android:color/white"/>
+    <Button
+        android:id="@+id/callButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/ic_phone"
+        android:backgroundTint="@color/colorAccent" />
 
-
-            <TextView
-                android:id="@+id/TIFullName"
-                android:layout_width="110dp"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_centerVertical="true"
-                android:padding="8dp"
-                android:text="Jens Leirens"
-                android:textColor="@android:color/white"/>
-
-
-            <Button
-                android:id="@+id/callButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/ic_phone"
-                android:backgroundTint="@color/colorbutton"
-                />
-
-      </RelativeLayout>
-
-    </android.support.v7.widget.CardView>
-
-</LinearLayout>
+</RelativeLayout>

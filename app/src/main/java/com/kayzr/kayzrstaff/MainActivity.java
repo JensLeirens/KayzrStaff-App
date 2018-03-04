@@ -22,6 +22,7 @@ import com.kayzr.kayzrstaff.domain.Availability;
 import com.kayzr.kayzrstaff.domain.DaoSession;
 import com.kayzr.kayzrstaff.domain.EndWeek;
 import com.kayzr.kayzrstaff.domain.KayzrApp;
+import com.kayzr.kayzrstaff.domain.Role;
 import com.kayzr.kayzrstaff.domain.Tournament;
 import com.kayzr.kayzrstaff.domain.User;
 import com.kayzr.kayzrstaff.domain.UserDao;
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.nav_view)
     NavigationView navigationView;
 
-    private static int currentPage = 0;
+    private static int currentPage = R.id.nav_home;
     public static KayzrApp app;
 
     @Override
@@ -68,10 +69,28 @@ public class MainActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        //maak de api calls
+        getThisWeekTournaments();
+        getAvailabilities();
+        getEndOfWeek();
+        getTeamInfo();
+        // als er NOG GEEN current user is dan moeten we deze gaan ophalen
+        if (app.getCurrentUser() == null) {
+            // haal de user asynchroon uit de database
+            new GetData().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            //we hebben al een user dus we kunnen hem meteen laten inloggen
+            checkNoUser();
+
+        }
+
+    }
     public void getThisWeekTournaments() {
 
         Calls caller = Config.getRetrofit().create(Calls.class);
@@ -153,6 +172,24 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+    public void getTeamInfo() {
+
+        Calls caller = Config.getRetrofit().create(Calls.class);
+        Call<List<User>> call = caller.getUsers();
+        call.enqueue(new Callback<List<User>>() {
+            @Override
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                app.setKayzrTeam(response.body());
+                Log.d("Backend Call", " call successful (getTeam)");
+            }
+
+
+            @Override
+            public void onFailure(Call<List<User>> call, Throwable t) {
+                Log.e("Backend CAll", "call failed (getTeam) " + t.getMessage());
+            }
+        });
+    }
 
     @Override
     public void onBackPressed() {
@@ -210,27 +247,27 @@ public class MainActivity extends AppCompatActivity
             fragment = new HomeFragment();
             toolbar.setTitle("KayzrStaff");
             navigationView.getMenu().getItem(0).setChecked(true);
-            currentPage = 0 ;
+            currentPage = R.id.nav_home ;
         } else if (itemId == R.id.nav_this_week) {
             fragment = new RosterFragment();
             toolbar.setTitle("This week");
             navigationView.getMenu().getItem(1).setChecked(true);
-            currentPage = 1 ;
+            currentPage = R.id.nav_this_week ;
         } else if (itemId == R.id.nav_availabilities) {
             fragment = new AvailibilitiesFragment();
             toolbar.setTitle("Availibilities");
             navigationView.getMenu().getItem(2).setChecked(true);
-            currentPage = 2 ;
+            currentPage = R.id.nav_availabilities ;
         } else if (itemId == R.id.nav_team_info) {
             fragment = new TeamInfoFragment();
             toolbar.setTitle("Team Info");
             navigationView.getMenu().getItem(3).setChecked(true);
-            currentPage = 3 ;
+            currentPage = R.id.nav_team_info ;
         } else if (itemId == R.id.nav_about) {
             fragment = new AboutFragment();
             toolbar.setTitle("About");
             navigationView.getMenu().getItem(4).setChecked(true);
-            currentPage = 4 ;
+            currentPage = R.id.nav_about ;
         }
 
         // Replace the fragment.
@@ -245,35 +282,22 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        // als er NOG GEEN current user is dan moeten we deze gaan ophalen
-        if (app.getCurrentUser() == null) {
-            // haal de user asynchroon uit de database
-            new GetData().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            //we hebben al een user dus we kunnen hem meteen laten inloggen
-            checkNoUser();
-        }
 
-    }
 
     public void checkNoUser() {
         // check if the user is logged in
         if (app.getCurrentUser().isLoggedOn()) {
-            //maak de api calls
-            getThisWeekTournaments();
-            getAvailabilities();
-            getEndOfWeek();
 
             //zet de username in de sidebar
             View navView = navigationView.getHeaderView(0);
-            TextView username = (TextView) navView.findViewById(R.id.userName);
+            TextView username = navView.findViewById(R.id.userName);
             username.setText(MainActivity.app.getCurrentUser().getUsername());
 
             //ga naar zijn laatste scherm
             displaySelectedScreen(currentPage);
+            if(app.getCurrentUser().getRole().equals(Role.CM)){
+                navigationView.getMenu().getItem(5).setVisible(true);
+            }
         } else {
             //if no user logged in then close the app
             if (!LoginActivity.leave) {

@@ -62,12 +62,17 @@ public class RosterAdapter extends RecyclerView.Adapter<RosterAdapter.RosterView
         }
 
         //adding the color for the moderator
+
         for(User u : MainActivity.app.getKayzrTeam()){
+            if(u.getUsername().equals("Mafken")){
+                u.setRole(Role.CM);
+            }
             if(tournaments.get(position).getModerator().contains(u.getUsername())){
-                if(u.getRole() == Role.Mod){
-                    tournyMod.setTextColor(ContextCompat.getColor(c,R.color.colorMOD));
-                } else if(u.getRole() == Role.CM){
+                if(u.getRole() == Role.CM){
                     tournyMod.setTextColor(ContextCompat.getColor(c, R.color.colorCM));
+                    break; // to end the for so it does not get overwritten
+                } else if(u.getRole() == Role.Mod){
+                    tournyMod.setTextColor(ContextCompat.getColor(c,R.color.colorMOD));
                 } else if(u.getRole() == Role.Admin){
                     tournyMod.setTextColor(ContextCompat.getColor(c, R.color.colorAdmin));
                 }
@@ -79,6 +84,10 @@ public class RosterAdapter extends RecyclerView.Adapter<RosterAdapter.RosterView
             tournyMod.setTextColor(ContextCompat.getColor(c,R.color.colorCancelled));
         }
 
+        if(mod.equals("")){
+            tournyMod.setTextColor(ContextCompat.getColor(c,R.color.colorCancelled));
+            mod = "No Moderator assigned";
+        }
         //adding the fun or PS colors
 
         if(tournamentName.contains("PS:")){
@@ -119,9 +128,11 @@ public class RosterAdapter extends RecyclerView.Adapter<RosterAdapter.RosterView
         }
 
         tournyMod.setText(moderator ? mod : "" );
-        tournyStartHour.setText("Begint om " + tournaments.get(position).getUur());
         tournyName.setText(tournamentName);
-        tournyDate.setText(tournaments.get(position).getDag() + " " + tournaments.get(position).getDatum());
+        //using the formatted string in the String values
+        tournyStartHour.setText(c.getString(R.string.tournamentHour, tournaments.get(position).getUur()));
+        tournyDate.setText(c.getString(R.string.tournamentDate,
+                tournaments.get(position).getDag(),tournaments.get(position).getDatum()));
     }
 
     @Override

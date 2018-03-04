@@ -9,17 +9,36 @@
     android:orientation="vertical"
     android:weightSum="1">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/avDate"
-        android:padding="5dp"
-        android:layout_gravity="center"
-        android:text="Monday 13.11.2017"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:textColor="@color/colorText"
-        />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_alignParentStart="true"
+            android:layout_alignBaseline="@+id/sendAvailabilities"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/avDate"
+            android:padding="5dp"
+            android:layout_gravity="center"
+            android:text="Monday 13.11.2017"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorText"
+            />
+
+        <Button
+            android:layout_alignParentEnd="true"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:text="Send"
+            android:backgroundTint="@color/colorAccent"
+            android:id="@+id/sendAvailabilities"
+            android:layout_marginBottom="10dp"
+            />
+    </RelativeLayout>
+
 
     <ScrollView
         android:layout_width="match_parent"
@@ -45,37 +64,6 @@
         android:textSize="20sp"
         android:id="@+id/avNextWeekInfoText"
         />
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp">
-
-    <Button
-        android:layout_alignParentStart="true"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:padding="20dp"
-        android:layout_gravity="center"
-        android:text="clear Availabilities"
-        android:backgroundTint="@color/colorbutton"
-        android:id="@+id/clearAvailabilities"
-        android:layout_marginBottom="10dp"
-        />
-    <Button
-        android:layout_alignParentEnd="true"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:padding="20dp"
-        android:layout_gravity="center"
-        android:text="Send Availabilities"
-        android:backgroundTint="@color/colorbutton"
-        android:id="@+id/sendAvailabilities"
-        android:layout_marginBottom="10dp"
-        />
-
-</RelativeLayout>
 
     <android.support.design.widget.TabLayout
         android:id="@+id/avTablayout"
@@ -90,31 +78,31 @@
             android:id="@+id/tabMaandag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="M"/>
+            android:text="Ma"/>
 
         <android.support.design.widget.TabItem
             android:id="@+id/tabdinsdag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="D"/>
+            android:text="Di"/>
 
         <android.support.design.widget.TabItem
             android:id="@+id/tabwoensdag"
             android:layout_width="120dp"
             android:layout_height="50dp"
-            android:text="W"/>
+            android:text="Wo"/>
 
         <android.support.design.widget.TabItem
             android:id="@+id/tabdonderdag"
             android:layout_width="120dp"
             android:layout_height="50dp"
-            android:text="D"/>
+            android:text="Do"/>
 
         <android.support.design.widget.TabItem
             android:id="@+id/tabvrijdag"
             android:layout_width="120dp"
             android:layout_height="50dp"
-            android:text="V"/>
+            android:text="Vr"/>
 
         <android.support.design.widget.TabItem
             android:id="@+id/tabzaterdag"

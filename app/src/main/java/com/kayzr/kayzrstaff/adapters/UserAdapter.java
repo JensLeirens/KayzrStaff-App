@@ -40,11 +40,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     @Override
     public void onBindViewHolder(UserViewHolder holder, final int position) {
         TextView TIFullName = holder.TIFullName;
-        TextView TIusername = holder.TIusername;
+        TextView TIUsername = holder.TIUsername;
+        TextView TINumber = holder.TINumber;
         Button callButton = holder.callButton;
 
         TIFullName.setText(users.get(position).getFullname());
-        TIusername.setText(users.get(position).getUsername());
+        TIUsername.setText(users.get(position).getUsername());
+        TINumber.setText(users.get(position).getGsm());
 
         callButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,8 +73,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         @BindView(R.id.TIFullName)
         public TextView TIFullName;
 
-        @BindView(R.id.TIusername)
-        public TextView TIusername;
+        @BindView(R.id.TIUsername)
+        public TextView TIUsername;
+
+        @BindView(R.id.TINumber)
+        public TextView TINumber;
 
         @BindView(R.id.callButton)
         public Button callButton;

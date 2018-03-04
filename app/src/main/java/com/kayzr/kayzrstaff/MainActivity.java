@@ -153,20 +153,20 @@ public class MainActivity extends AppCompatActivity
     public void getEndOfWeek() {
 
         Calls caller = Config.getRetrofit().create(Calls.class);
-        Call<List<EndWeek>> call = caller.getEndweek();
-        call.enqueue(new Callback<List<EndWeek>>() {
+        Call<EndWeek> call = caller.getEndweek();
+        call.enqueue(new Callback<EndWeek>() {
             @Override
-            public void onResponse(Call<List<EndWeek>> call, Response<List<EndWeek>> response) {
-                MainActivity.app.setEndOfWeek(response.body().get(0));
+            public void onResponse(Call<EndWeek> call, Response<EndWeek> response) {
+                MainActivity.app.setEndOfWeek(response.body());
                 Log.d("Backend Call", " call successful (getEndweek)");
-                if (app.getEndOfWeek().getEndWeek() == 1) {
+                if (app.getEndOfWeek().getEndWeek()) {
                     getNextWeekTournaments();
                 }
             }
 
 
             @Override
-            public void onFailure(Call<List<EndWeek>> call, Throwable t) {
+            public void onFailure(Call<EndWeek> call, Throwable t) {
                 Log.e("Backend Call", "call failed (getEndweek) " + t.getMessage());
             }
         });
@@ -255,7 +255,7 @@ public class MainActivity extends AppCompatActivity
             currentPage = R.id.nav_this_week ;
         } else if (itemId == R.id.nav_availabilities) {
             fragment = new AvailibilitiesFragment();
-            toolbar.setTitle("Availibilities");
+            toolbar.setTitle("availabilities");
             navigationView.getMenu().getItem(2).setChecked(true);
             currentPage = R.id.nav_availabilities ;
         } else if (itemId == R.id.nav_team_info) {

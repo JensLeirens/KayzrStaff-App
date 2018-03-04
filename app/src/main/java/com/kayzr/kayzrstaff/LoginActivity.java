@@ -14,7 +14,6 @@ import com.kayzr.kayzrstaff.network.Config;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -108,17 +107,17 @@ public class LoginActivity extends AppCompatActivity {
         protected Boolean doInBackground(Void... params) {
             // we make the call to get the userinfo and pas from the backend with the username
             Calls caller = Config.getRetrofit().create(Calls.class);
-            Call<List<User>> call = caller.getUser(mUsername);
-            call.enqueue(new Callback<List<User>>() {
+            Call <User> call = caller.getUser(mUsername);
+            call.enqueue(new Callback<User>() {
                 @Override
-                public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                public void onResponse(Call<User> call, Response<User> response) {
 
                     try {
                         //Normaal verloop: de user uit backend halen
-                        currentUser = response.body().get(0);
+                        currentUser = response.body();
                         Log.d("Backend Call", " call successful (get user)");
 
-                        //kijken of het paswoord gelijk is
+                        //kijken of het password gelijk is
                         if (mPassword.equals(currentUser.getPassword())) {
                             currentUser.setLoggedOn(true);
                             MainActivity.app.setCurrentUser(currentUser);
@@ -140,7 +139,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(Call<List<User>> call, Throwable t) {
+                public void onFailure(Call <User> call, Throwable t) {
                     //als er een error is in de call
                     Log.e("Backend CAll", "call failed (get user) " + t.getMessage());
                     Toast.makeText(getApplicationContext(), "The service is currently down! " +

@@ -60,8 +60,6 @@ public class AvailibilitiesFragment extends Fragment {
         ButterKnife.bind(this, v);
         setCurrentDayAsDefault();
         calculateWeekDates();
-        //End Week 0 = Niet einde van de week. Dus availabilities zijn nog open.
-        //End Week 1 = Einde van de Week. Roster Next Week is gemaakt en mensen kunnen geen availabilities meer invullen
         checkWeek();
 
         mTablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -91,7 +89,10 @@ public class AvailibilitiesFragment extends Fragment {
 
     private void checkWeek(){
         initializeAdapterData(MainActivity.app.dayOfWeek(tabIndex));
-        if(MainActivity.app.getEndOfWeek().getEndWeek() == 0 ){
+        //End Week false: Niet einde van de week. Dus availabilities zijn nog open.
+        //End Week true: Einde van de Week. Roster Next Week is gemaakt en mensen kunnen geen availabilities meer invullen
+
+        if(!MainActivity.app.getEndOfWeek().getEndWeek()){
             //data bereken voor availabilty en juiste adapter koppelen
             calculateData();
             initializeAvAdapter();
@@ -178,42 +179,53 @@ public class AvailibilitiesFragment extends Fragment {
     }
 
     @OnClick(R.id.sendAvailabilities)
-    public void sendAvailabilities(){
+    public void clearAvailabilities(){
         Calls caller = Config.getRetrofit().create(Calls.class);
-        Call call = caller.clearAV(MainActivity.app.getCurrentUser().getUsername(),"8w03QQ2ByD6vxZEPSBjPJR89SeQhoR8C");
-        call.enqueue(new Callback<List<JsonResponse>>() {
+        Call call = caller.clearAV("8w03QQ2ByD6vxZEPSBjPJR89SeQhoR8C", MainActivity.app.getCurrentUser().getUsername());
+        call.enqueue(new Callback<JsonResponse>() {
             @Override
-            public void onResponse(Call<List<JsonResponse>> call, Response<List<JsonResponse>> response) {
+            public void onResponse(Call<JsonResponse> call, Response<JsonResponse> response) {
+                JsonResponse jsonResponse = response.body();
+                Log.d("Backend CAll", "call succes (clear Availabilities) ");
+                Log.d("Backend CAll", "call RESPONSE " + jsonResponse.isError() + " message: " + jsonResponse.getMessage());
+
                 totalAmountOfAVSend = MainActivity.app.getAvailabilities().size();
 
-                if(totalAmountOfAVSend > 0 ) {
-                    for (Availability av : MainActivity.app.getAvailabilities()) {
-                        sendCallAvailabilities(av);
+                if(!jsonResponse.isError()) {
+                    if (totalAmountOfAVSend > 0) {
+                        for (Availability av : MainActivity.app.getAvailabilities()) {
+                            sendAvailability(av);
+                        }
+                    } else {
+                        Toast.makeText(getContext(), "No availabilities send! ", Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Toast.makeText(getContext(),"No availabilities send! ",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "There was a disturbance in the force", Toast.LENGTH_LONG).show();
                 }
-
             }
 
             @Override
-            public void onFailure(Call<List<JsonResponse>> call, Throwable t) {
+            public void onFailure(Call<JsonResponse> call, Throwable t) {
                 Log.e("Backend CAll", "call failed (clear Availabilities) " + t.getMessage());
+                Toast.makeText(getContext(), "Failed to send availabilities!", Toast.LENGTH_LONG).show();
+
             }
         });
 
     }
 
-    public void sendCallAvailabilities(final Availability av){
+    public void sendAvailability(final Availability av){
         Calls caller = Config.getRetrofit().create(Calls.class);
-        Call call = caller.sendAV(MainActivity.app.getCurrentUser().getUsername(), String.valueOf(av.getTournamentId()), "8w03QQ2ByD6vxZEPSBjPJR89SeQhoR8C");
-        call.enqueue(new Callback<List<JsonResponse>>() {
+        Call call = caller.sendAV("8w03QQ2ByD6vxZEPSBjPJR89SeQhoR8C", MainActivity.app.getCurrentUser().getUsername(), String.valueOf(av.getTournamentId()) );
+        call.enqueue(new Callback<JsonResponse>() {
             @Override
-            public void onResponse(Call<List<JsonResponse>> call, Response<List<JsonResponse>> response) {
-                List<JsonResponse> responses = response.body();
+            public void onResponse(Call<JsonResponse> call, Response<JsonResponse> response) {
+                JsonResponse jsonResponse = response.body();
                 Log.d("Backend CAll", "call succes (send Availabilities) ");
-                Log.d("Backend CAll", "call RESPONSE " + responses.get(0).getError());
-                amountOfAvailabiltiesSend ++;
+                Log.d("Backend CAll", "call RESPONSE " + jsonResponse.isError() + "message: " + jsonResponse.getMessage());
+                if(!jsonResponse.isError()) {
+                    amountOfAvailabiltiesSend++;
+                }
 
                 if(amountOfAvailabiltiesSend == totalAmountOfAVSend) {
                     Toast.makeText(getContext(), "Succesfully send " + amountOfAvailabiltiesSend + " availabilities", Toast.LENGTH_LONG).show();
@@ -221,7 +233,7 @@ public class AvailibilitiesFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<JsonResponse>> call, Throwable t) {
+            public void onFailure(Call<JsonResponse> call, Throwable t) {
                 Log.e("Backend CAll", "call failed (send Availabilities) " + t.getMessage());
                 if(amountOfAvailabiltiesSend == totalAmountOfAVSend) {
                     Toast.makeText(getContext(), "Succesfully send " + amountOfAvailabiltiesSend + " availabilities", Toast.LENGTH_LONG).show();

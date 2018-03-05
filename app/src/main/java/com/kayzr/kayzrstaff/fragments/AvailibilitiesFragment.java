@@ -14,12 +14,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.kayzr.kayzrstaff.MainActivity;
 import com.kayzr.kayzrstaff.R;
 import com.kayzr.kayzrstaff.adapters.AvailabilitiesAdapter;
 import com.kayzr.kayzrstaff.adapters.RosterAdapter;
 import com.kayzr.kayzrstaff.domain.Availability;
 import com.kayzr.kayzrstaff.domain.JsonResponse;
+import com.kayzr.kayzrstaff.domain.KayzrApp;
 import com.kayzr.kayzrstaff.domain.Tournament;
 import com.kayzr.kayzrstaff.network.Calls;
 import com.kayzr.kayzrstaff.network.Config;
@@ -52,13 +52,14 @@ public class AvailibilitiesFragment extends Fragment {
     private int totalAmountOfAVSend = 0 ;
     private List<Tournament> tournamentsOfThatDay = new ArrayList<>();
     private List<String> days = new ArrayList<>();
+    private KayzrApp app;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_availabilities, container, false);
         ButterKnife.bind(this, v);
-        setCurrentDayAsDefault();
+        app = (KayzrApp) getActivity().getApplicationContext();
         calculateWeekDates();
         checkWeek();
 
@@ -88,11 +89,11 @@ public class AvailibilitiesFragment extends Fragment {
     }
 
     private void checkWeek(){
-        initializeAdapterData(MainActivity.app.dayOfWeek(tabIndex));
+        initializeAdapterData(app.dayOfWeek(tabIndex));
         //End Week false: Niet einde van de week. Dus availabilities zijn nog open.
         //End Week true: Einde van de Week. Roster Next Week is gemaakt en mensen kunnen geen availabilities meer invullen
 
-        if(!MainActivity.app.getEndOfWeek().getEndWeek()){
+        if(!app.getEndOfWeek().getEndWeek()){
             //data bereken voor availabilty en juiste adapter koppelen
             calculateData();
             initializeAvAdapter();
@@ -112,25 +113,25 @@ public class AvailibilitiesFragment extends Fragment {
         List<Availability> avs = new ArrayList<>();
         //Selecting the av for the current user
         // app crash when availabilities is 0
-        if (MainActivity.app.getAvailabilities() != null) {
-        for(Availability av : MainActivity.app.getAvailabilities()){
-            if(av.getUser().equals(MainActivity.app.getCurrentUser().getUsername())){
+        if (app.getAvailabilities() != null) {
+        for(Availability av : app.getAvailabilities()){
+            if(av.getUser().equals(app.getCurrentUser().getUsername())){
                 avs.add(av);
             }
         }
         //set the avs
-        MainActivity.app.setAvailabilities(avs);
+        app.setAvailabilities(avs);
 
         //get the tournament details of the avs
-        for(Tournament t : MainActivity.app.getThisWeek()){
-            for(Availability av : MainActivity.app.getAvailabilities()){
+        for(Tournament t : app.getThisWeek()){
+            for(Availability av : app.getAvailabilities()){
                 if(t.getId() == av.getTournamentId()){
                     av.setTournament(t);
                 }
             }
         }
         } else {
-            MainActivity.app.setAvailabilities(new ArrayList<Availability>());
+            app.setAvailabilities(new ArrayList<Availability>());
         }
 
     }
@@ -139,9 +140,9 @@ public class AvailibilitiesFragment extends Fragment {
 
         tournamentsOfThatDay.clear();
 
-        String selectedDay = MainActivity.app.dayOfWeek(tabIndex);
+        String selectedDay = app.dayOfWeek(tabIndex);
 
-            for(Tournament t : MainActivity.app.getNextWeek()){
+            for(Tournament t : app.getNextWeek()){
                 if(t.getDag().equals(selectedDay)){
                     tournamentsOfThatDay.add(t);
                 }
@@ -165,23 +166,17 @@ public class AvailibilitiesFragment extends Fragment {
     private void initializeAdapterData(String dayOfWeek){
         tournamentsOfThatDay.clear();
 
-        for(Tournament t : MainActivity.app.getThisWeek()){
+        for(Tournament t : app.getThisWeek()){
             if(t.getDag().equals(dayOfWeek)){
                 tournamentsOfThatDay.add(t);
             }
         }
     }
 
-    public void setCurrentDayAsDefault(){
-        tabIndex = MainActivity.app.currentDayOfWeek();
-        initializeAdapterData(MainActivity.app.dayOfWeek(tabIndex));
-        mTablayout.getTabAt(tabIndex).select();
-    }
-
     @OnClick(R.id.sendAvailabilities)
     public void clearAvailabilities(){
         Calls caller = Config.getRetrofit().create(Calls.class);
-        Call call = caller.clearAV("8w03QQ2ByD6vxZEPSBjPJR89SeQhoR8C", MainActivity.app.getCurrentUser().getUsername());
+        Call call = caller.clearAV("8w03QQ2ByD6vxZEPSBjPJR89SeQhoR8C", app.getCurrentUser().getUsername());
         call.enqueue(new Callback<JsonResponse>() {
             @Override
             public void onResponse(Call<JsonResponse> call, Response<JsonResponse> response) {
@@ -189,11 +184,11 @@ public class AvailibilitiesFragment extends Fragment {
                 Log.d("Backend CAll", "call succes (clear Availabilities) ");
                 Log.d("Backend CAll", "call RESPONSE " + jsonResponse.isError() + " message: " + jsonResponse.getMessage());
 
-                totalAmountOfAVSend = MainActivity.app.getAvailabilities().size();
+                totalAmountOfAVSend = app.getAvailabilities().size();
 
                 if(!jsonResponse.isError()) {
                     if (totalAmountOfAVSend > 0) {
-                        for (Availability av : MainActivity.app.getAvailabilities()) {
+                        for (Availability av : app.getAvailabilities()) {
                             sendAvailability(av);
                         }
                     } else {
@@ -216,7 +211,7 @@ public class AvailibilitiesFragment extends Fragment {
 
     public void sendAvailability(final Availability av){
         Calls caller = Config.getRetrofit().create(Calls.class);
-        Call call = caller.sendAV("8w03QQ2ByD6vxZEPSBjPJR89SeQhoR8C", MainActivity.app.getCurrentUser().getUsername(), String.valueOf(av.getTournamentId()) );
+        Call call = caller.sendAV("8w03QQ2ByD6vxZEPSBjPJR89SeQhoR8C", app.getCurrentUser().getUsername(), String.valueOf(av.getTournamentId()) );
         call.enqueue(new Callback<JsonResponse>() {
             @Override
             public void onResponse(Call<JsonResponse> call, Response<JsonResponse> response) {

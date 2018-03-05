@@ -14,8 +14,8 @@
     <string name="tournamentDate">%s %s</string>
 
     <!-- Strings related to About -->
-    <string name="aboutWho">The Kayzr staff application is made by <font fgcolor="#ff5b1c"><b>Mafken</b></font>
-        with great help from <font fgcolor="#ff5b1c"><b>Pollie</b></font>.
+    <string name="aboutWho">The Kayzr staff application is made by <font fgcolor="#890501"><b>Mafken</b></font>
+        with great help from <font fgcolor="#890501"><b>Pollie</b></font>.
     The purpose of the application is to let moderators check the schedule on the go and contact fellow moderators easily.</string>
     <string name="aboutversion">Version 3.2</string>
 

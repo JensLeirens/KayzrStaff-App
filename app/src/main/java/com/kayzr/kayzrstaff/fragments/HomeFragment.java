@@ -10,9 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.kayzr.kayzrstaff.MainActivity;
 import com.kayzr.kayzrstaff.R;
 import com.kayzr.kayzrstaff.adapters.RosterAdapter;
+import com.kayzr.kayzrstaff.domain.KayzrApp;
 import com.kayzr.kayzrstaff.domain.Tournament;
 import com.kayzr.kayzrstaff.network.Calls;
 import com.kayzr.kayzrstaff.network.Config;
@@ -32,12 +32,15 @@ public class HomeFragment extends Fragment {
     @BindView(R.id.modDaysRecycler) RecyclerView mRecycler;
     protected RecyclerView.LayoutManager mLayoutManager;
     private List<Tournament> tournaments = new ArrayList<>();
+    private KayzrApp app;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, v);
+        app = (KayzrApp) getActivity().getApplicationContext();
+
         processData();
         getThisWeekTournaments();
 
@@ -45,10 +48,11 @@ public class HomeFragment extends Fragment {
     }
 
     private void processData(){
+        tournaments.clear();
 
-        if(MainActivity.app.getCurrentUser() != null){
-            for(Tournament t : MainActivity.app.getThisWeek()){
-                if(t.getModerator().contains(MainActivity.app.getCurrentUser().getUsername())){
+        if(app.getCurrentUser() != null){
+            for(Tournament t : app.getThisWeek()){
+                if(t.getModerator().contains(app.getCurrentUser().getUsername())){
                     tournaments.add(t);
                 }
             }
@@ -69,7 +73,7 @@ public class HomeFragment extends Fragment {
         call.enqueue(new Callback<List<Tournament>>() {
             @Override
             public void onResponse(Call<List<Tournament>> call, Response<List<Tournament>> response) {
-                MainActivity.app.setThisWeek(response.body());
+                app.setThisWeek(response.body());
                 processData();
                 Log.d("Backend Call", " call successful (ThisWeekTournaments)");
 

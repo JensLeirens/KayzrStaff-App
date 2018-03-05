@@ -5,14 +5,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 
-import com.kayzr.kayzrstaff.MainActivity;
 import com.kayzr.kayzrstaff.R;
 import com.kayzr.kayzrstaff.domain.Availability;
+import com.kayzr.kayzrstaff.domain.KayzrApp;
 import com.kayzr.kayzrstaff.domain.Tournament;
 import com.squareup.picasso.Picasso;
 
@@ -26,10 +26,13 @@ public class AvailabilitiesAdapter extends RecyclerView.Adapter<AvailabilitiesAd
     private int itemCount;
     private List<Tournament> tournaments;
     private Context c;
+    private KayzrApp app;
+
     public AvailabilitiesAdapter(List<Tournament> tournaments, Context c) {
         this.tournaments = tournaments;
         this.itemCount = this.tournaments.size() ;
         this.c = c;
+        app = (KayzrApp) c.getApplicationContext();
     }
 
     @Override
@@ -42,13 +45,13 @@ public class AvailabilitiesAdapter extends RecyclerView.Adapter<AvailabilitiesAd
     public void onBindViewHolder(final AvailabilitiesViewHolder holder, final int position) {
         TextView avCardHour = holder.avCardHour;
         TextView avTourneyName = holder.avTourneyName;
-        Switch avBeschikbaar = holder.avBeschikbaar;
+        CheckBox avBeschikbaar = holder.avBeschikbaar;
         ImageView tournyImage = holder.avImage;
         final int pos = holder.getAdapterPosition();
         avCardHour.setText(c.getString(R.string.tournamentHour, tournaments.get(pos).getUur()));
 
 
-        for(Availability av : MainActivity.app.getAvailabilities()){
+        for(Availability av : app.getAvailabilities()){
             if(tournaments.get(pos).getId() == av.getTournament().getId()){
                 av.setChecked(true);
                 avBeschikbaar.setChecked(av.isChecked());
@@ -99,19 +102,19 @@ public class AvailabilitiesAdapter extends RecyclerView.Adapter<AvailabilitiesAd
         avBeschikbaar.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b ) {
-                Availability av = new Availability(MainActivity.app.getCurrentUser().getUsername(), tournaments.get(pos).getId());
+                Availability av = new Availability(app.getCurrentUser().getUsername(), tournaments.get(pos).getId());
                 if(b) {
-                    if (!MainActivity.app.getAvailabilities().contains(av)) {
-                        MainActivity.app.getAvailabilities().add(av);
+                    if (!app.getAvailabilities().contains(av)) {
+                        app.getAvailabilities().add(av);
                     }
                 } else {
 
-                   for( Availability todelete: MainActivity.app.getAvailabilities()){
+                   for( Availability todelete: app.getAvailabilities()){
                        if( todelete.getTournamentId() == av.getTournamentId()){
                            av = todelete;
                        }
                    }
-                   MainActivity.app.getAvailabilities().remove(av);
+                   app.getAvailabilities().remove(av);
 
                 }
             }
@@ -133,7 +136,7 @@ public class AvailabilitiesAdapter extends RecyclerView.Adapter<AvailabilitiesAd
         public TextView avTourneyName;
 
         @BindView(R.id.avBeschikbaar)
-        public Switch avBeschikbaar;
+        public CheckBox avBeschikbaar;
 
         @BindView(R.id.avImage)
         public ImageView avImage;

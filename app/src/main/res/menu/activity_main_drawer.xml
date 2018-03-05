@@ -23,11 +23,6 @@
             android:id="@+id/nav_about"
             android:icon="@drawable/ic_about"
             android:title="About" />
-        <item
-            android:id="@+id/nav_cm_functions"
-            android:icon="@drawable/ic_cm_availabilities"
-            android:title="CM: Availabilities"
-            android:visible="false"/>
     </group>
 
 </menu>

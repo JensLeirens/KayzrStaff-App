@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.kayzr.kayzrstaff.domain.KayzrApp;
 import com.kayzr.kayzrstaff.domain.User;
 import com.kayzr.kayzrstaff.network.Calls;
 import com.kayzr.kayzrstaff.network.Config;
@@ -33,17 +34,19 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.signIn) Button signin ;
     public User currentUser ;
     public static boolean leave = false;
+    private KayzrApp app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+        app = (KayzrApp) getApplicationContext();
 
         //If the user wanted to remember the username and pas then fill it already in for him
-        if(MainActivity.app.getCurrentUser().getRememberUsernameAndPass()){
-            mUsername.setText(MainActivity.app.getCurrentUser().getUsername());
-            mPassword.setText(MainActivity.app.getCurrentUser().getPassword());
+        if(app.getCurrentUser().getRememberUsernameAndPass()){
+            mUsername.setText(app.getCurrentUser().getUsername());
+            mPassword.setText(app.getCurrentUser().getPassword());
         }
 
     }
@@ -59,9 +62,14 @@ public class LoginActivity extends AppCompatActivity {
             Log.e("Sha encrypt error", e.toString());
         }
 
-        if(MainActivity.app.getCurrentUser().getRememberUsernameAndPass()){
-            UserLoginTask task = new UserLoginTask(mUsername.getText().toString(), mPassword.getText().toString());
-            task.doInBackground();
+        if(app.getCurrentUser().getRememberUsernameAndPass()){
+            if(app.getCurrentUser().getPassword().equals(mPassword.getText().toString())){
+                UserLoginTask task = new UserLoginTask(mUsername.getText().toString(), mPassword.getText().toString());
+                task.doInBackground();
+            } else {
+                UserLoginTask task = new UserLoginTask(mUsername.getText().toString(), encryptedPas);
+                task.doInBackground();
+            }
         } else {
             UserLoginTask task = new UserLoginTask(mUsername.getText().toString(), encryptedPas);
             task.doInBackground();
@@ -120,9 +128,9 @@ public class LoginActivity extends AppCompatActivity {
                         //kijken of het password gelijk is
                         if (mPassword.equals(currentUser.getPassword())) {
                             currentUser.setLoggedOn(true);
-                            MainActivity.app.setCurrentUser(currentUser);
-                            MainActivity.app.getCurrentUser().setPassword(mPassword);
-
+                            app.setCurrentUser(currentUser);
+                            app.getCurrentUser().setPassword(mPassword);
+                            app.getCurrentUser().setRememberUsernameAndPass(true);
                             // de login activity is afgelopen en de user is ingelogd deze activity mag afgesloten worden
                             finish();
 

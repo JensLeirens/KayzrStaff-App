@@ -27,38 +27,38 @@
         android:layout_height="50dp"
         android:layout_gravity="bottom"
         android:elevation="1dp"
-        app:tabTextColor="@android:color/white"
-        app:tabSelectedTextColor="@color/colorText">
+        app:tabTextColor="@color/colorText"
+        app:tabSelectedTextColor="@color/colorAccent">
 
         <android.support.design.widget.TabItem
             android:id="@+id/tabMaandag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="M"/>
+            android:text="Ma"/>
 
         <android.support.design.widget.TabItem
             android:id="@+id/tabdinsdag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="D"/>
+            android:text="Di"/>
 
         <android.support.design.widget.TabItem
             android:id="@+id/tabwoensdag"
             android:layout_width="120dp"
             android:layout_height="50dp"
-            android:text="W"/>
+            android:text="Wo"/>
 
         <android.support.design.widget.TabItem
             android:id="@+id/tabdonderdag"
             android:layout_width="120dp"
             android:layout_height="50dp"
-            android:text="D"/>
+            android:text="Do"/>
 
         <android.support.design.widget.TabItem
             android:id="@+id/tabvrijdag"
             android:layout_width="120dp"
             android:layout_height="50dp"
-            android:text="V"/>
+            android:text="Vr"/>
 
         <android.support.design.widget.TabItem
             android:id="@+id/tabzaterdag"

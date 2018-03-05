@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.kayzr.kayzrstaff.MainActivity;
 import com.kayzr.kayzrstaff.R;
+import com.kayzr.kayzrstaff.domain.KayzrApp;
 import com.kayzr.kayzrstaff.domain.Role;
 import com.kayzr.kayzrstaff.domain.Tournament;
 import com.kayzr.kayzrstaff.domain.User;
@@ -27,12 +27,14 @@ public class RosterAdapter extends RecyclerView.Adapter<RosterAdapter.RosterView
     private Context c ;
     private List<Tournament> tournaments;
     private Boolean moderator;
+    private KayzrApp app;
 
     public RosterAdapter(List<Tournament> tournaments,Boolean moderator, Context c) {
         this.tournaments = tournaments;
         this.itemCount = tournaments.size();
         this.c = c ;
         this.moderator = moderator;
+
     }
 
     @Override
@@ -51,6 +53,7 @@ public class RosterAdapter extends RecyclerView.Adapter<RosterAdapter.RosterView
         //CardView cardView = holder.cardView;
         String tournamentName = tournaments.get(position).getNaam();
         String tournamentNameKort = tournaments.get(position).getNaamkort();
+        app = (KayzrApp) c.getApplicationContext();
 
         // checking for multiple moderators
         String mod;
@@ -63,10 +66,7 @@ public class RosterAdapter extends RecyclerView.Adapter<RosterAdapter.RosterView
 
         //adding the color for the moderator
 
-        for(User u : MainActivity.app.getKayzrTeam()){
-            if(u.getUsername().equals("Mafken")){
-                u.setRole(Role.CM);
-            }
+        for(User u : app.getKayzrTeam()){
             if(tournaments.get(position).getModerator().contains(u.getUsername())){
                 if(u.getRole() == Role.CM){
                     tournyMod.setTextColor(ContextCompat.getColor(c, R.color.colorCM));

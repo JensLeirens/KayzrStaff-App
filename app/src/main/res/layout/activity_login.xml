@@ -39,11 +39,14 @@
 
                 <EditText
                     android:id="@+id/LoginUsername"
+                    style="@style/Widget.AppCompat.EditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_email"
+                    android:inputType="textPersonName"
+                    android:lines="1"
                     android:maxLines="1"
-                    android:textColor="@color/colorText"/>
+                    android:textColor="@color/colorText" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -55,12 +58,13 @@
 
                 <EditText
                     android:id="@+id/Loginpassword"
+                    style="@style/Widget.AppCompat.EditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_password"
                     android:inputType="textPassword"
                     android:maxLines="1"
-                    android:textColor="@color/colorText"/>
+                    android:textColor="@color/colorText" />
 
             </android.support.design.widget.TextInputLayout>
 

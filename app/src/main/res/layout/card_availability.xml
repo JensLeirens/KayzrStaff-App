@@ -51,16 +51,16 @@
                     android:layout_centerInParent="true"
                     android:gravity="center"
                     android:layout_alignParentStart="true"
-                    android:text="Available: "
+                    android:text="Available:"
                     android:textColor="@color/colorText"/>
 
-                <Switch
+                <CheckBox
                     android:id="@+id/avBeschikbaar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:scaleX="1.5"
-                    android:scaleY="1.5"
+                    android:scaleX="1.75"
+                    android:scaleY="1.75"
                     android:layout_margin="10dp"
                     />
             </RelativeLayout>

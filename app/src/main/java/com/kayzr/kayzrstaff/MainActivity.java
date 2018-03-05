@@ -22,7 +22,6 @@ import com.kayzr.kayzrstaff.domain.Availability;
 import com.kayzr.kayzrstaff.domain.DaoSession;
 import com.kayzr.kayzrstaff.domain.EndWeek;
 import com.kayzr.kayzrstaff.domain.KayzrApp;
-import com.kayzr.kayzrstaff.domain.Role;
 import com.kayzr.kayzrstaff.domain.Tournament;
 import com.kayzr.kayzrstaff.domain.User;
 import com.kayzr.kayzrstaff.domain.UserDao;
@@ -54,7 +53,7 @@ public class MainActivity extends AppCompatActivity
     NavigationView navigationView;
 
     private static int currentPage = R.id.nav_home;
-    public static KayzrApp app;
+    private KayzrApp app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,7 +156,7 @@ public class MainActivity extends AppCompatActivity
         call.enqueue(new Callback<EndWeek>() {
             @Override
             public void onResponse(Call<EndWeek> call, Response<EndWeek> response) {
-                MainActivity.app.setEndOfWeek(response.body());
+                app.setEndOfWeek(response.body());
                 Log.d("Backend Call", " call successful (getEndweek)");
                 if (app.getEndOfWeek().getEndWeek()) {
                     getNextWeekTournaments();
@@ -291,13 +290,10 @@ public class MainActivity extends AppCompatActivity
             //zet de username in de sidebar
             View navView = navigationView.getHeaderView(0);
             TextView username = navView.findViewById(R.id.userName);
-            username.setText(MainActivity.app.getCurrentUser().getUsername());
+            username.setText(app.getCurrentUser().getUsername());
 
             //ga naar zijn laatste scherm
             displaySelectedScreen(currentPage);
-            if(app.getCurrentUser().getRole().equals(Role.CM)){
-                navigationView.getMenu().getItem(5).setVisible(true);
-            }
         } else {
             //if no user logged in then close the app
             if (!LoginActivity.leave) {

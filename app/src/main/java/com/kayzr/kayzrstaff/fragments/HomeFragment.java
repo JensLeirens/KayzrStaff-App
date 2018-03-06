@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.kayzr.kayzrstaff.R;
 import com.kayzr.kayzrstaff.adapters.RosterAdapter;
@@ -30,6 +31,7 @@ public class HomeFragment extends Fragment {
 
 
     @BindView(R.id.modDaysRecycler) RecyclerView mRecycler;
+    @BindView(R.id.loading_spinner) ProgressBar spinner;
     protected RecyclerView.LayoutManager mLayoutManager;
     private List<Tournament> tournaments = new ArrayList<>();
     private KayzrApp app;
@@ -40,7 +42,6 @@ public class HomeFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, v);
         app = (KayzrApp) getActivity().getApplicationContext();
-
         processData();
         getThisWeekTournaments();
 
@@ -57,7 +58,9 @@ public class HomeFragment extends Fragment {
                 }
             }
         }
-
+        if(tournaments.size() == 0 ){
+            tournaments.add(0,(new Tournament(0,"No tournaments assigned","","","","/","")));
+        }
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecycler.setLayoutManager(mLayoutManager);
 
@@ -67,7 +70,7 @@ public class HomeFragment extends Fragment {
     }
 
     public void getThisWeekTournaments() {
-
+        spinner.setVisibility(View.VISIBLE);
         Calls caller = Config.getRetrofit().create(Calls.class);
         Call<List<Tournament>> call = caller.getThisWeekTournaments();
         call.enqueue(new Callback<List<Tournament>>() {
@@ -75,6 +78,7 @@ public class HomeFragment extends Fragment {
             public void onResponse(Call<List<Tournament>> call, Response<List<Tournament>> response) {
                 app.setThisWeek(response.body());
                 processData();
+                spinner.setVisibility(View.GONE);
                 Log.d("Backend Call", " call successful (ThisWeekTournaments)");
 
             }

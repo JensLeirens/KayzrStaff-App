@@ -123,6 +123,15 @@ public class RosterAdapter extends RecyclerView.Adapter<RosterAdapter.RosterView
         } else if (tournamentNameKort.contains("Dota")) {
             Picasso.with(c).load(R.drawable.dota).into(tournyImage);
 
+        } else if (tournamentNameKort.contains("BH")) {
+            Picasso.with(c).load(R.drawable.brawlhalla).into(tournyImage);
+
+        } else if (tournamentNameKort.contains("OW")) {
+            Picasso.with(c).load(R.drawable.overwatch).into(tournyImage);
+
+        } else if (tournamentNameKort.contains("SC")) {
+            Picasso.with(c).load(R.drawable.scii).into(tournyImage);
+
         } else {
             Picasso.with(c).load(R.drawable.icon).into(tournyImage);
         }

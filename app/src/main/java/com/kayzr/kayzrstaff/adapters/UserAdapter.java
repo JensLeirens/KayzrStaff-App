@@ -51,12 +51,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         callButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(users.get(position).getUsername().equals("Cancelled")){
-                    Toast.makeText(context,"Its Easy???!",Toast.LENGTH_SHORT).show(); //hihi
-                }else {
+
+                if(users.get(position).getGsm().length() > 9){
                     Intent intent = new Intent(Intent.ACTION_DIAL);
                     intent.setData(Uri.parse("tel:" + users.get(position).getGsm()));
                     context.startActivity(intent);
+                } else {
+                    Toast.makeText(context,"No phone number found!",Toast.LENGTH_LONG).show();
                 }
             }
         });

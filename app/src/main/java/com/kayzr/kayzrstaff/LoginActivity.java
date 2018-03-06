@@ -4,8 +4,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.kayzr.kayzrstaff.domain.KayzrApp;
@@ -28,10 +30,11 @@ import retrofit2.Response;
  */
 public class LoginActivity extends AppCompatActivity {
 
-
     @BindView(R.id.LoginUsername) EditText mUsername;
     @BindView(R.id.Loginpassword) EditText mPassword;
     @BindView(R.id.signIn) Button signin ;
+    @BindView(R.id.loading_spinner) ProgressBar spinner ;
+
     public User currentUser ;
     public static boolean leave = false;
     private KayzrApp app;
@@ -47,13 +50,15 @@ public class LoginActivity extends AppCompatActivity {
         if(app.getCurrentUser().getRememberUsernameAndPass()){
             mUsername.setText(app.getCurrentUser().getUsername());
             mPassword.setText(app.getCurrentUser().getPassword());
+            signin.requestFocus();
         }
 
     }
 
     @OnClick(R.id.signIn)
     public void signIn()  {
-
+        spinner.setVisibility(View.VISIBLE);
+        signin.setVisibility(View.INVISIBLE);
         //encrypt the password
         String encryptedPas = "" ;
         try{
@@ -137,6 +142,8 @@ public class LoginActivity extends AppCompatActivity {
                         } else {
                             // user is niet ingelogd toon een popup
                             Toast.makeText(getApplicationContext(), "Wrong password or username", Toast.LENGTH_LONG).show();
+                            spinner.setVisibility(View.GONE);
+                            signin.setVisibility(View.VISIBLE);
                         }
                     } catch (NullPointerException npe) {
                         // mocht de backend niet werken of de username is verkeerd dan krijgt men een nullpointer

@@ -28,7 +28,8 @@
         android:layout_gravity="bottom"
         android:elevation="1dp"
         app:tabTextColor="@color/colorText"
-        app:tabSelectedTextColor="@color/colorAccent">
+        app:tabSelectedTextColor="@color/colorAccent"
+        app:tabIndicatorHeight="4dp">
 
         <android.support.design.widget.TabItem
             android:id="@+id/tabMaandag"

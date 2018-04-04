@@ -19,7 +19,7 @@ public class KayzrApp extends Application {
     private User currentUser ;
     private EndWeek endOfWeek;
     private int tabIndex;
-
+    private boolean connectedToGoogle = false ;
     private DaoSession daoSession;
 
     @Override
@@ -29,7 +29,6 @@ public class KayzrApp extends Application {
         Database db = helper.getWritableDb();
         daoSession = new DaoMaster(db).newSession();
     }
-
 
     public DaoSession getDaoSession() {
         return daoSession;
@@ -87,6 +86,13 @@ public class KayzrApp extends Application {
         this.currentUser = currentUser;
     }
 
+    public boolean isConnectedToGoogle() {
+        return connectedToGoogle;
+    }
+
+    public void setConnectedToGoogle(boolean connectedToGoogle) {
+        this.connectedToGoogle = connectedToGoogle;
+    }
 
     public int currentDeviceDay(){//neemt de huidige dag vd week vh toestel
         GregorianCalendar calendar = new GregorianCalendar();

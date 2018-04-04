@@ -28,4 +28,8 @@
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
 
+    <!-- Strings related to settings-->
+    <string name="calendar_connection_status">Connection status: %s</string>
+    <string name="calendar_tournaments_added">Tournaments Added: %s</string>
+
 </resources>

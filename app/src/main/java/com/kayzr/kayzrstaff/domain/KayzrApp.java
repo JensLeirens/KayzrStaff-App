@@ -2,12 +2,16 @@ package com.kayzr.kayzrstaff.domain;
 
 import android.app.Application;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.greenrobot.greendao.database.Database;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+
+import io.fabric.sdk.android.Fabric;
 
 
 public class KayzrApp extends Application {
@@ -25,6 +29,7 @@ public class KayzrApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "KayzrStaff-db");
         Database db = helper.getWritableDb();
         daoSession = new DaoMaster(db).newSession();

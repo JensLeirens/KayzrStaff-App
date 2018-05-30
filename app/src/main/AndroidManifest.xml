@@ -27,6 +27,9 @@
             android:name=".LoginActivity"
             android:label="@string/title_activity_login">
         </activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="8aed66172f75efca5f6d6f9c10107a23a92bd258" />
     </application>
 
 </manifest>

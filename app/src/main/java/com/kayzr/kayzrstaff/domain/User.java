@@ -15,7 +15,7 @@ public class User {
     @Id
     private long id;
     
-    private int userId;
+    private String userId;
     private boolean loggedOn ;
     private String username;
     private String password;
@@ -45,8 +45,8 @@ public class User {
         this.fullname = fullname;
     }
 
-    @Generated(hash = 1597889354)
-    public User(long id, int userId, boolean loggedOn, String username, String password, Role role, String gsm,
+    @Generated(hash = 965566429)
+    public User(long id, String userId, boolean loggedOn, String username, String password, Role role, String gsm,
             String fullname, boolean notifactionsModDay, boolean notifactionsAV, boolean rememberUsernameAndPass) {
         this.id = id;
         this.userId = userId;
@@ -61,6 +61,7 @@ public class User {
         this.rememberUsernameAndPass = rememberUsernameAndPass;
     }
 
+   
     public boolean isLoggedOn() {
         return loggedOn;
     }
@@ -157,11 +158,11 @@ public class User {
         this.id = id;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return this.userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

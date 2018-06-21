@@ -92,6 +92,8 @@ public class MainActivity extends AppCompatActivity
         } else {
             //we hebben al een user dus we kunnen hem meteen laten inloggen
             checkNoUser();
+            // asynchroon opslaan!
+            saveData();
 
         }
 
@@ -353,21 +355,12 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public void onStop() {
-        //als er een user is sla deze op!
-        if (app.getCurrentUser() != null) {
-            // asynchroon oplsaan!
-            saveData();
-        }
-        super.onStop();
-    }
-
     private void saveData() {
-
+        realm = Realm.getDefaultInstance();
         realm.executeTransaction(r -> {
             //adds the current user to the realm
-            realm.insertOrUpdate(app.getCurrentUser());
+            realm.deleteAll(); //clears the realm
+            realm.insertOrUpdate(app.getCurrentUser());// adds the current user
 
         });
 

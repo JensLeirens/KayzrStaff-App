@@ -1,67 +1,59 @@
 package com.kayzr.kayzrstaff.domain;
 
-import org.greenrobot.greendao.annotation.Convert;
-import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Generated;
-import org.greenrobot.greendao.annotation.Id;
-import org.greenrobot.greendao.converter.PropertyConverter;
+
+import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by Mafken on 7/09/2017.
  */
-@Entity
-public class User {
+public class User extends RealmObject{
 
-    @Id
-    private long id;
-    
-    private String userId;
-    private boolean loggedOn ;
+    @PrimaryKey
+    private String id;
+
+    private String avatar;
     private String username;
     private String password;
+    private String position;
 
-    @Convert(converter = RoleConverter.class, columnType = String.class)
-    private Role role;
+    @Ignore
+    private boolean loggedOn ;
 
-    private String gsm;
-    private String fullname;
-
+    private String phone;
     //settings
-    private boolean notifactionsModDay;
-    private boolean notifactionsAV;
     private boolean rememberUsernameAndPass;
 
 
     public User() {
     }
 
-    public User(int id, boolean loggedOn, String username, String password, Role role, String gsm, String fullname) {
+    public User(String id, boolean loggedOn, String username, String password, String position, String phone) {
         this.id = id;
         this.loggedOn = loggedOn;
         this.username = username;
         this.password = password;
-        this.role = role;
-        this.gsm = gsm;
-        this.fullname = fullname;
+        this.position = position;
+        this.phone = phone;
     }
 
-    @Generated(hash = 965566429)
-    public User(long id, String userId, boolean loggedOn, String username, String password, Role role, String gsm,
-            String fullname, boolean notifactionsModDay, boolean notifactionsAV, boolean rememberUsernameAndPass) {
-        this.id = id;
-        this.userId = userId;
-        this.loggedOn = loggedOn;
-        this.username = username;
-        this.password = password;
-        this.role = role;
-        this.gsm = gsm;
-        this.fullname = fullname;
-        this.notifactionsModDay = notifactionsModDay;
-        this.notifactionsAV = notifactionsAV;
-        this.rememberUsernameAndPass = rememberUsernameAndPass;
+    public String getAvatar() {
+        return avatar;
     }
 
-   
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
     public boolean isLoggedOn() {
         return loggedOn;
     }
@@ -86,44 +78,12 @@ public class User {
         this.password = password;
     }
 
-    public Role getRole() {
-        return role;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public String getGsm() {
-        return gsm;
-    }
-
-    public void setGsm(String gsm) {
-        this.gsm = gsm;
-    }
-
-    public String getFullname() {
-        return fullname;
-    }
-
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
-    }
-
-    public boolean isNotifactionsModDay() {
-        return notifactionsModDay;
-    }
-
-    public void setNotifactionsModDay(boolean notifactionsModDay) {
-        this.notifactionsModDay = notifactionsModDay;
-    }
-
-    public boolean isNotifactionsAV() {
-        return notifactionsAV;
-    }
-
-    public void setNotifactionsAV(boolean notifactionsAV) {
-        this.notifactionsAV = notifactionsAV;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public boolean isRememberUsernameAndPass() {
@@ -138,43 +98,17 @@ public class User {
         return this.loggedOn;
     }
 
-    public boolean getNotifactionsModDay() {
-        return this.notifactionsModDay;
-    }
-
-    public boolean getNotifactionsAV() {
-        return this.notifactionsAV;
-    }
-
     public boolean getRememberUsernameAndPass() {
         return this.rememberUsernameAndPass;
     }
 
-    public long getId() {
+    public String getId() {
         return this.id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getUserId() {
-        return this.userId;
-    }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    static class RoleConverter implements PropertyConverter<Role, String> {
-        @Override
-        public Role convertToEntityProperty(String databaseValue) {
-            return Role.valueOf(databaseValue);
-        }
-
-        @Override
-        public String convertToDatabaseValue(Role entityProperty) {
-            return entityProperty.name();
-        }
-    }
 }

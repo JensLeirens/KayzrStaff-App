@@ -4,14 +4,13 @@ import android.app.Application;
 
 import com.crashlytics.android.Crashlytics;
 
-import org.greenrobot.greendao.database.Database;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
+import io.realm.Realm;
 
 
 public class KayzrApp extends Application {
@@ -24,23 +23,13 @@ public class KayzrApp extends Application {
     private EndWeek endOfWeek;
     private int tabIndex;
     private boolean connectedToGoogle = false ;
-    private DaoSession daoSession;
 
     @Override
     public void onCreate() {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "KayzrStaff-db");
-        Database db = helper.getWritableDb();
-        daoSession = new DaoMaster(db).newSession();
-    }
+        Realm.init(this);
 
-    public DaoSession getDaoSession() {
-        return daoSession;
-    }
-
-    public void setDaoSession(DaoSession daoSession) {
-        this.daoSession = daoSession;
     }
 
     public List<Tournament> getNextWeek() {
@@ -104,6 +93,7 @@ public class KayzrApp extends Application {
         return calendar.get(Calendar.DAY_OF_WEEK);
 
     }
+
     public int currentDayOfWeek(){
         int day = currentDeviceDay();
         switch(day){
@@ -132,6 +122,7 @@ public class KayzrApp extends Application {
         }
         return tabIndex;
     }
+
     public String dayOfWeek(int i){
         String selectedDay = "";
         if(i == 0 ){

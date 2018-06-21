@@ -43,7 +43,9 @@ import com.google.api.services.calendar.model.Events;
 import com.kayzr.kayzrstaff.R;
 import com.kayzr.kayzrstaff.adapters.RosterAdapter;
 import com.kayzr.kayzrstaff.domain.KayzrApp;
+import com.kayzr.kayzrstaff.domain.NetworkClasses.TournamentResponse;
 import com.kayzr.kayzrstaff.domain.Tournament;
+import com.kayzr.kayzrstaff.domain.User;
 import com.kayzr.kayzrstaff.network.Calls;
 import com.kayzr.kayzrstaff.network.Config;
 
@@ -99,13 +101,15 @@ public class HomeFragment extends Fragment implements EasyPermissions.Permission
 
         if(app.getCurrentUser() != null){
             for(Tournament t : app.getThisWeek()){
-                if(t.getModerator().contains(app.getCurrentUser().getUsername())){
-                    tournaments.add(t);
+                for(User mod : t.getModerators()){
+                    if(mod.getUsername().equals(app.getCurrentUser().getUsername())){
+                        tournaments.add(t);
+                    }
                 }
             }
         }
         if(tournaments.size() == 0 ){
-            tournaments.add(0,(new Tournament(0,"No tournaments assigned","","","","/","")));
+            tournaments.add(0,(new Tournament("0","No tournaments assigned","","","","/",new ArrayList<User>())));
         }
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecycler.setLayoutManager(mLayoutManager);
@@ -118,19 +122,21 @@ public class HomeFragment extends Fragment implements EasyPermissions.Permission
     public void getThisWeekTournaments() {
         spinner.setVisibility(View.VISIBLE);
         Calls caller = Config.getRetrofit().create(Calls.class);
-        Call<List<Tournament>> call = caller.getThisWeekTournaments();
-        call.enqueue(new Callback<List<Tournament>>() {
+        Call<TournamentResponse> call = caller.getThisWeekTournaments();
+        call.enqueue(new Callback<TournamentResponse>() {
             @Override
-            public void onResponse(Call<List<Tournament>> call, Response<List<Tournament>> response) {
-                app.setThisWeek(response.body());
-                processData();
-                spinner.setVisibility(View.GONE);
-                Log.d("Backend Call", " call successful (ThisWeekTournaments)");
+            public void onResponse(Call<TournamentResponse> call, Response<TournamentResponse> response) {
+                if(response.body().isSuccess()) {
+                    app.setThisWeek(response.body().getData());
+                    processData();
+                    spinner.setVisibility(View.GONE);
+                    Log.d("Backend Call", " call successful (ThisWeekTournaments)");
+                }
 
             }
 
             @Override
-            public void onFailure(Call<List<Tournament>> call, Throwable t) {
+            public void onFailure(Call<TournamentResponse> call, Throwable t) {
                 Log.e("Backend Call", "call failed (ThisWeekTournaments) " + t.getMessage());
             }
         });

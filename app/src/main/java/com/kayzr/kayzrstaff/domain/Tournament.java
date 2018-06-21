@@ -1,36 +1,35 @@
 package com.kayzr.kayzrstaff.domain;
 
-/**
- * Created by Mafken on 7/09/2017.
- */
+import java.util.List;
 
 public class Tournament {
-    private int id;
+    private String id;
     private String naam;
     private String naamkort;
     private String dag;
     private String datum;
     private String uur;
-    private String moderator;
+    private boolean cancelled;
+    private List<User> moderators;
 
-    public Tournament(int id, String naam, String naamkort, String dag, String datum, String uur, String moderator) {
+    public Tournament(String id, String naam, String naamkort, String dag, String datum, String uur, List<User> moderators) {
         this.id = id;
         this.naam = naam;
         this.naamkort = naamkort;
         this.dag = dag;
         this.datum = datum;
         this.uur = uur;
-        this.moderator = moderator;
+        this.moderators = moderators;
     }
 
     public Tournament() {
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -74,11 +73,15 @@ public class Tournament {
         this.uur = uur;
     }
 
-    public String getModerator() {
-        return moderator;
+    public List<User> getModerators() {
+        return moderators;
     }
 
-    public void setModerator(String moderator) {
-        this.moderator = moderator;
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
     }
 }

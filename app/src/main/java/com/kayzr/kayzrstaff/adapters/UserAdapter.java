@@ -39,22 +39,22 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
     @Override
     public void onBindViewHolder(UserViewHolder holder, final int position) {
+        //Todo Rework
         TextView TIFullName = holder.TIFullName;
         TextView TIUsername = holder.TIUsername;
         TextView TINumber = holder.TINumber;
         Button callButton = holder.callButton;
-
-        TIFullName.setText(users.get(position).getFullname());
+        TIFullName.setText(" " );
         TIUsername.setText(users.get(position).getUsername());
-        TINumber.setText(users.get(position).getGsm());
+        TINumber.setText(users.get(position).getPhone());
 
         callButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if(users.get(position).getGsm().length() > 9){
+                if(users.get(position).getPhone().length() > 9){
                     Intent intent = new Intent(Intent.ACTION_DIAL);
-                    intent.setData(Uri.parse("tel:" + users.get(position).getGsm()));
+                    intent.setData(Uri.parse("tel:" + users.get(position).getPhone()));
                     context.startActivity(intent);
                 } else {
                     Toast.makeText(context,"No phone number found!",Toast.LENGTH_LONG).show();

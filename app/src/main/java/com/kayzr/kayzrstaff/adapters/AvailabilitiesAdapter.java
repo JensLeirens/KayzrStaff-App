@@ -111,7 +111,7 @@ public class AvailabilitiesAdapter extends RecyclerView.Adapter<AvailabilitiesAd
         avBeschikbaar.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b ) {
-                Availability av = new Availability(app.getCurrentUser().getUsername(), tournaments.get(pos).getId());
+                Availability av = new Availability(app.getCurrentUser(), tournaments.get(pos));
                 if(b) {
                     if (!app.getAvailabilities().contains(av)) {
                         app.getAvailabilities().add(av);
@@ -119,7 +119,7 @@ public class AvailabilitiesAdapter extends RecyclerView.Adapter<AvailabilitiesAd
                 } else {
 
                    for( Availability todelete: app.getAvailabilities()){
-                       if( todelete.getTournamentId() == av.getTournamentId()){
+                       if( todelete.getTournament().getId().equals(av.getTournament().getId())){
                            av = todelete;
                        }
                    }

@@ -11,6 +11,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.kayzr.kayzrstaff.domain.KayzrApp;
+import com.kayzr.kayzrstaff.domain.NetworkClasses.AuthRequest;
+import com.kayzr.kayzrstaff.domain.NetworkClasses.AuthResponse;
 import com.kayzr.kayzrstaff.domain.User;
 import com.kayzr.kayzrstaff.network.Calls;
 import com.kayzr.kayzrstaff.network.Config;
@@ -120,28 +122,39 @@ public class LoginActivity extends AppCompatActivity {
         protected Boolean doInBackground(Void... params) {
             // we make the call to get the userinfo and pas from the backend with the username
             Calls caller = Config.getRetrofit().create(Calls.class);
-            Call <User> call = caller.getUser(mUsername);
-            call.enqueue(new Callback<User>() {
+//            String body = "{\"username\": \"" + mUsername + "\", \"password\": \"" + mPassword +  "\"} ";
+//
+//            JSONObject json = null;
+//            try {
+//                json = new JSONObject(body);
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//            Log.d("Backend Call", " call data (Post auth) body: " + json );
+
+
+            Call <AuthResponse> call = caller.getAuth(new AuthRequest(mUsername,mPassword));
+            call.enqueue(new Callback<AuthResponse>() {
                 @Override
-                public void onResponse(Call<User> call, Response<User> response) {
+                public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
 
                     try {
-                        //Normaal verloop: de user uit backend halen
-                        currentUser = response.body();
-                        Log.d("Backend Call", " call successful (get user)");
 
-                        //kijken of het password gelijk is
-                        if (mPassword.equals(currentUser.getPassword())) {
+                        //Normaal verloop: de user uit backend halen
+                        currentUser = response.body().getUser();
+                        Log.d("Backend Call", " call successful (Post auth)");
+
+                        //kijken of de user met succes is ingelogd
+                        if (response.body().isSuccess()) {
                             currentUser.setLoggedOn(true);
                             app.setCurrentUser(currentUser);
                             app.getCurrentUser().setPassword(mPassword);
-                            app.getCurrentUser().setRememberUsernameAndPass(true);
                             // de login activity is afgelopen en de user is ingelogd deze activity mag afgesloten worden
                             finish();
 
                         } else {
                             // user is niet ingelogd toon een popup
-                            Toast.makeText(getApplicationContext(), "Wrong password or username", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_LONG).show();
                             spinner.setVisibility(View.GONE);
                             signin.setVisibility(View.VISIBLE);
                         }
@@ -150,13 +163,15 @@ public class LoginActivity extends AppCompatActivity {
                         // dit was dan de makkelijkste manier om deze op te vangen
                         Toast.makeText(getApplicationContext(), "There is no user like that or the service is currently down! " +
                                 "please report this to Mafken", Toast.LENGTH_LONG).show();
+                        spinner.setVisibility(View.GONE);
+                        signin.setVisibility(View.VISIBLE);
                     }
                 }
 
                 @Override
-                public void onFailure(Call <User> call, Throwable t) {
+                public void onFailure(Call <AuthResponse> call, Throwable t) {
                     //als er een error is in de call
-                    Log.e("Backend CAll", "call failed (get user) " + t.getMessage());
+                    Log.e("Backend CAll", "call failed (Post auth) " + t.getMessage() + " " + call.request().toString());
                     Toast.makeText(getApplicationContext(), "The service is currently down! " +
                             "please report this to Mafken", Toast.LENGTH_LONG).show();
                 }

@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.kayzr.kayzrstaff.R;
 import com.kayzr.kayzrstaff.domain.KayzrApp;
-import com.kayzr.kayzrstaff.domain.Role;
 import com.kayzr.kayzrstaff.domain.Tournament;
 import com.kayzr.kayzrstaff.domain.User;
 import com.squareup.picasso.Picasso;
@@ -56,31 +55,46 @@ public class RosterAdapter extends RecyclerView.Adapter<RosterAdapter.RosterView
         app = (KayzrApp) c.getApplicationContext();
 
         // checking for multiple moderators
-        String mod;
-        if(tournaments.get(position).getModerator().contains(";")){
-            mod = tournaments.get(position).getModerator().replace(";"," & ");
-        } else
-        {
-            mod = tournaments.get(position).getModerator() ;
+        StringBuilder modBuilder = new StringBuilder();
+        if(tournaments.get(position).getModerators().size() > 1 ) {
+            for (User m : tournaments.get(position).getModerators()) {
+                modBuilder.append(m.getUsername());
+                if(!m.getUsername().equals(tournaments.get(position).getModerators()
+                        .get(tournaments.get(position).getModerators().size() -1 ).getUsername())){
+                    modBuilder.append("\n");
+                }
+            }
+        } else if(tournaments.get(position).getModerators().size() == 1 ) {
+            modBuilder.append(tournaments.get(position).getModerators().get(0).getUsername());
         }
 
         //adding the color for the moderator
+        if(tournaments.get(position).getModerators() != null && moderator) {
+            for (User u : app.getKayzrTeam()) {
+                breakFor: //when the line: "break breakFor;" is called the outer for will not get called again
+                for (User moderator : tournaments.get(position).getModerators()) {
+                    if (u.getId().equals(moderator.getId())) {
+                        switch (u.getPosition()) {
+                            case "Community Manager":
+                                tournyMod.setTextColor(ContextCompat.getColor(c, R.color.colorCM));
+                                break breakFor;
 
-        for(User u : app.getKayzrTeam()){
-            if(tournaments.get(position).getModerator().contains(u.getUsername())){
-                if(u.getRole() == Role.CM){
-                    tournyMod.setTextColor(ContextCompat.getColor(c, R.color.colorCM));
-                    break; // to end the for so it does not get overwritten
-                } else if(u.getRole() == Role.Mod){
-                    tournyMod.setTextColor(ContextCompat.getColor(c,R.color.colorMOD));
-                } else if(u.getRole() == Role.Admin){
-                    tournyMod.setTextColor(ContextCompat.getColor(c, R.color.colorAdmin));
+                            case "Moderator":
+                                tournyMod.setTextColor(ContextCompat.getColor(c, R.color.colorMOD));
+                                break;
+                            case "Admin":
+                                tournyMod.setTextColor(ContextCompat.getColor(c, R.color.colorAdmin));
+                                break;
+                        }
+                    }
                 }
             }
         }
 
+        String mod = modBuilder.toString();
         //checking for cancelled tourny
-        if(mod.equals("Cancelled")){
+        if(tournaments.get(position).isCancelled()){
+            mod = "Cancelled";
             tournyMod.setTextColor(ContextCompat.getColor(c,R.color.colorCancelled));
         }
 

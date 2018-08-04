@@ -2,7 +2,6 @@ package com.kayzr.kayzrstaff.domain;
 
 
 import io.realm.RealmObject;
-import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
 
 /**
@@ -18,7 +17,6 @@ public class User extends RealmObject{
     private String password;
     private String position;
 
-    @Ignore
     private boolean loggedOn ;
 
     private String phone;

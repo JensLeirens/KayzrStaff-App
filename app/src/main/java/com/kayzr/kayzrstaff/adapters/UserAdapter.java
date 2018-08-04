@@ -8,11 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kayzr.kayzrstaff.R;
 import com.kayzr.kayzrstaff.domain.User;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -39,14 +41,14 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
     @Override
     public void onBindViewHolder(UserViewHolder holder, final int position) {
-        //Todo Rework
-        TextView TIFullName = holder.TIFullName;
         TextView TIUsername = holder.TIUsername;
         TextView TINumber = holder.TINumber;
         Button callButton = holder.callButton;
-        TIFullName.setText(" " );
+        ImageView TIAvatar = holder.TIAvatar;
+
         TIUsername.setText(users.get(position).getUsername());
         TINumber.setText(users.get(position).getPhone());
+        Picasso.with(context).load(users.get(position).getAvatar()).into(TIAvatar);
 
         callButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,8 +73,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
     public static class UserViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.TIFullName)
-        public TextView TIFullName;
+        @BindView(R.id.TIAvatar)
+        public ImageView TIAvatar;
 
         @BindView(R.id.TIUsername)
         public TextView TIUsername;

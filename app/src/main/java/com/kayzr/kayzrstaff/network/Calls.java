@@ -1,11 +1,11 @@
 package com.kayzr.kayzrstaff.network;
 
-import com.kayzr.kayzrstaff.domain.EndWeek;
 import com.kayzr.kayzrstaff.domain.NetworkClasses.AuthRequest;
 import com.kayzr.kayzrstaff.domain.NetworkClasses.AuthResponse;
 import com.kayzr.kayzrstaff.domain.NetworkClasses.AvRequest;
 import com.kayzr.kayzrstaff.domain.NetworkClasses.AvResponse;
 import com.kayzr.kayzrstaff.domain.NetworkClasses.AvSendResponse;
+import com.kayzr.kayzrstaff.domain.NetworkClasses.EndWeekResponse;
 import com.kayzr.kayzrstaff.domain.NetworkClasses.TournamentResponse;
 import com.kayzr.kayzrstaff.domain.NetworkClasses.UserResponse;
 
@@ -38,6 +38,6 @@ public interface Calls {
     Call<UserResponse> getUsers(@Query("key") String Key);
 
     @GET("EndWeek/")
-    Call<EndWeek> getEndweek();
+    Call<EndWeekResponse> getEndweek();
 
 }

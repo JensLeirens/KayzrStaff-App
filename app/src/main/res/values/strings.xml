@@ -17,7 +17,7 @@
     <string name="aboutWho">The Kayzr staff application is made by <font fgcolor="#890501"><b>Mafken</b></font>
         with great help from <font fgcolor="#890501"><b>Pollie</b></font>.
     The purpose of the application is to let moderators check the schedule on the go and contact fellow moderators easily.</string>
-    <string name="aboutversion">Version 3.3</string>
+    <string name="aboutversion">Version 3.4</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Username</string>

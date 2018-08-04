@@ -19,9 +19,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kayzr.kayzrstaff.domain.Availability;
-import com.kayzr.kayzrstaff.domain.EndWeek;
 import com.kayzr.kayzrstaff.domain.KayzrApp;
 import com.kayzr.kayzrstaff.domain.NetworkClasses.AvResponse;
+import com.kayzr.kayzrstaff.domain.NetworkClasses.EndWeekResponse;
 import com.kayzr.kayzrstaff.domain.NetworkClasses.TournamentResponse;
 import com.kayzr.kayzrstaff.domain.NetworkClasses.UserResponse;
 import com.kayzr.kayzrstaff.domain.Tournament;
@@ -40,9 +40,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.Realm;
-import io.realm.RealmChangeListener;
-import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -59,7 +56,7 @@ public class MainActivity extends AppCompatActivity
 
     private static int currentPage = R.id.nav_home;
     private KayzrApp app;
-    private Realm realm;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,12 +66,36 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         app = (KayzrApp) getApplicationContext();
+        // als er NOG GEEN current user is dan moeten we deze gaan ophalen
+        if (app.getCurrentUser() == null) {
+            // haal de user uit de database
+            app.getData();
+        }
+        //kijken of hij all ingelogged is en zo nodig dan laten inloggen
+        //checkLoggedIn();
+
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    public void onStop(){
+        app.getCurrentUser().setLoggedOn(false);
+        app.saveData();
+        super.onStop();
+
+    }
+
+    @Override
+    public void onDestroy(){
+        app.getCurrentUser().setLoggedOn(false);
+        app.saveData();
+        super.onDestroy();
+
     }
 
     @Override
@@ -88,14 +109,14 @@ public class MainActivity extends AppCompatActivity
         // als er NOG GEEN current user is dan moeten we deze gaan ophalen
         if (app.getCurrentUser() == null) {
             // haal de user asynchroon uit de database
-            getData();
+            app.getData();
         } else {
-            //we hebben al een user dus we kunnen hem meteen laten inloggen
-            checkNoUser();
             // asynchroon opslaan!
-            saveData();
+            app.saveData();
 
         }
+        //kijken of hij all ingelogged is en zo nodig dan laten inloggen
+        checkLoggedIn();
 
     }
     public void getThisWeekTournaments() {
@@ -194,11 +215,11 @@ public class MainActivity extends AppCompatActivity
     public void getEndOfWeek() {
 
         Calls caller = Config.getRetrofit().create(Calls.class);
-        Call<EndWeek> call = caller.getEndweek();
-        call.enqueue(new Callback<EndWeek>() {
+        Call<EndWeekResponse> call = caller.getEndweek();
+        call.enqueue(new Callback<EndWeekResponse>() {
             @Override
-            public void onResponse(Call<EndWeek> call, Response<EndWeek> response) {
-                app.setEndOfWeek(response.body());
+            public void onResponse(Call<EndWeekResponse> call, Response<EndWeekResponse> response) {
+                app.setEndOfWeek(response.body().getEndWeek());
                 Log.d("Backend Call", " call successful (getEndweek)");
                 if (app.getEndOfWeek().getEndWeek()) {
                     getNextWeekTournaments();
@@ -207,7 +228,7 @@ public class MainActivity extends AppCompatActivity
 
 
             @Override
-            public void onFailure(Call<EndWeek> call, Throwable t) {
+            public void onFailure(Call<EndWeekResponse> call, Throwable t) {
                 Log.e("Backend Call", "call failed (getEndweek) " + t.getMessage());
             }
         });
@@ -329,9 +350,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-
-
-    public void checkNoUser() {
+    public void checkLoggedIn() {
         // check if the user is logged in
         if (app.getCurrentUser().isLoggedOn()) {
 
@@ -354,50 +373,4 @@ public class MainActivity extends AppCompatActivity
             }
         }
     }
-
-    private void saveData() {
-        realm = Realm.getDefaultInstance();
-        realm.executeTransaction(r -> {
-            //adds the current user to the realm
-            realm.deleteAll(); //clears the realm
-            realm.insertOrUpdate(app.getCurrentUser());// adds the current user
-
-        });
-
-    }
-
-    public void getData() {
-        // deze methode haalt de user uit de database
-        // Create the Realm instance
-
-        realm = Realm.getDefaultInstance();
-        RealmResults<User> users;
-        users = realm.where(User.class).findAllAsync();
-
-        users.addChangeListener(realmChangeListener);
-
-
-    }
-
-    private final RealmChangeListener<RealmResults<User>> realmChangeListener = (users) -> {
-        //todo: when logging in the app does not give a stored username or password
-        if (app.getCurrentUser() == null) {
-            Log.d("realmchangelistener", "user is null trying to get user from realm");
-            if (users.size() > 0) {
-
-                Log.d("realmchangelistener", "user size is bigger then 0 = " + users.size());
-                app.setCurrentUser(users.first());
-            } else {
-                Log.d("realmchangelistener", "user size is smaller then 0 = " + users.size());
-
-                app.setCurrentUser(new User());
-                app.getCurrentUser().setLoggedOn(false);
-            }
-            //als de user uit de DB is gaan we de controle starten voor de user in te loggen
-            checkNoUser();
-        } else {
-            Log.d("realmchangelistener", "current user is not null");
-        }
-
-    };
 }

@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.signIn) Button signin ;
     @BindView(R.id.loading_spinner) ProgressBar spinner ;
 
-    public User currentUser ;
+    public User loginUser;
     public static boolean leave = false;
     private KayzrApp app;
 
@@ -141,13 +141,15 @@ public class LoginActivity extends AppCompatActivity {
                     try {
 
                         //Normaal verloop: de user uit backend halen
-                        currentUser = response.body().getUser();
+                        loginUser = response.body().getUser();
                         Log.d("Backend Call", " call successful (Post auth)");
 
                         //kijken of de user met succes is ingelogd
                         if (response.body().isSuccess()) {
-                            currentUser.setLoggedOn(true);
-                            app.setCurrentUser(currentUser);
+                            Log.d("log in", " login succes");
+                            loginUser.setLoggedOn(true);
+                            loginUser.setRememberUsernameAndPass(app.getCurrentUser().getRememberUsernameAndPass());
+                            app.setCurrentUser(loginUser);
                             app.getCurrentUser().setPassword(mPassword);
                             // de login activity is afgelopen en de user is ingelogd deze activity mag afgesloten worden
                             finish();

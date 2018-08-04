@@ -1,8 +1,11 @@
 package com.kayzr.kayzrstaff.domain;
 
 import android.app.Application;
+import android.content.Intent;
+import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.kayzr.kayzrstaff.LoginActivity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -11,6 +14,7 @@ import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 
 public class KayzrApp extends Application {
@@ -23,6 +27,7 @@ public class KayzrApp extends Application {
     private EndWeek endOfWeek;
     private int tabIndex;
     private boolean connectedToGoogle = false ;
+    private Realm realm;
 
     @Override
     public void onCreate() {
@@ -142,5 +147,56 @@ public class KayzrApp extends Application {
         }
         return selectedDay;
     }
+
+    public void saveData() {
+        realm = Realm.getDefaultInstance();
+        realm.executeTransaction(r -> {
+            realm.deleteAll(); //clears the realm
+            realm.insert(getCurrentUser());// adds the current user
+        });
+
+    }
+
+    public void getData() {
+        // deze methode haalt de user uit de database
+        // Create the Realm instance
+        RealmConfiguration config = new RealmConfiguration.Builder()
+                .deleteRealmIfMigrationNeeded()
+                .build();
+
+        Realm.setDefaultConfiguration(config);
+        realm = Realm.getDefaultInstance();
+        if (realm.where(User.class).findFirst() == null ) {
+            currentUser = new User();
+        } else {
+            currentUser = realm.copyFromRealm(realm.where(User.class).findFirst());
+
+        }
+
+        if(currentUser == null){
+            setCurrentUser(new User());
+            getCurrentUser().setLoggedOn(false);
+            LogUserIn();
+        }
+        Log.d("realmchangelistener", "first user from realm: " + currentUser.getUsername());
+
+        if(currentUser.getUsername() == null ){
+            currentUser.setLoggedOn(false);
+        }
+
+
+    }
+
+    private void LogUserIn() {
+        // check if the user is logged in
+        if (!getCurrentUser().isLoggedOn()) {
+
+            Intent intent2 = new Intent(this, LoginActivity.class);
+            startActivity(intent2);
+
+        }
+    }
+
+
 
 }
